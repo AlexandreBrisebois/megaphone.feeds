@@ -7,18 +7,6 @@ updates:
       interval: "daily"
   # Maintain dependencies for nuget
   - package-ecosystem: "nuget"
-    directory: "src/megaphone.crawler.core/"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "nuget"
-    directory: "src/megaphone.crawler.core.tests/"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "nuget"
-    directory: "src/megaphone.crawler/"
-    schedule:
-      interval: "daily"
-  - package-ecosystem: "nuget"
-    directory: "src/megaphone.crawler.tests/"
+    directory: "src/megaphone.feeds/"
     schedule:
       interval: "daily"
