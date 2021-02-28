@@ -31,12 +31,6 @@ jobs:
     - name: build
       run: dotnet build "./src/megaphone.feeds.sln" --no-restore -c Release
 
-    - name: test - megaphone.feeds.core
-      run: dotnet test "./src/megaphone.feeds.core.tests/megaphone.feeds.core.tests.csproj" -c Release --no-build
-
-    - name: test - megaphone.feeds
-      run: dotnet test "./src/megaphone.feeds.tests/megaphone.feeds.tests.csproj" -c Release --no-build
-   
     - name: package - megaphone.feeds
       run: dotnet publish "./src/megaphone.feeds/megaphone.feeds.csproj" -c Release --no-build
 

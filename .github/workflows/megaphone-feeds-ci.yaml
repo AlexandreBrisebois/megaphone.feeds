@@ -10,12 +10,10 @@ on:
   push:
     paths:
       - 'src/megaphone.feeds/**'
-      - 'src/megaphone.feeds.tests/**'
   pull_request:
     branches: [ main ]
     paths:
       - 'src/megaphone.feeds/**'
-      - 'src/megaphone.feeds.tests/**'
 
 jobs:
    build:
@@ -31,14 +29,9 @@ jobs:
         source-url: https://nuget.pkg.github.com/AlexandreBrisebois/index.json
       env:
         NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: build and test megaphone.feeds
-      uses: zyborg/dotnet-tests-report@v1
-      with:
-          project_path: "./src/megaphone.feeds.tests/"
-          report_name: "Megaphone Feeds Tests Results"
-          report_title: ${{ format('Feeds CI ({0})', github.run_number) }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          gist_name: megaphone-feeds-test-results.md
-          gist_badge_label: 'Megaphone Feeds %Counters_passed%/%Counters_total%'
-          gist_token: ${{ secrets.GIST_TOKEN }}
-          set_check_status_from_test_outcome: true
+        
+    - name: restore
+      run: dotnet restore "./src/megaphone.feeds.sln"
+
+    - name: build
+      run: dotnet build "./src/megaphone.feeds.sln" --no-restore -c Release
