@@ -1,0 +1,44 @@
+name: "Megaphone Feeds CI"
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+  push:
+    paths:
+      - 'src/megaphone.feeds/**'
+      - 'src/megaphone.feeds.tests/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/megaphone.feeds/**'
+      - 'src/megaphone.feeds.tests/**'
+
+jobs:
+   build:
+    name: Megaphone CI
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1.7.2
+      with:
+        dotnet-version: '5.0.103'
+        source-url: https://nuget.pkg.github.com/AlexandreBrisebois/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: build and test megaphone.feeds
+      uses: zyborg/dotnet-tests-report@v1
+      with:
+          project_path: "./src/megaphone.feeds.tests/"
+          report_name: "Megaphone Feeds Tests Results"
+          report_title: ${{ format('Feeds CI ({0})', github.run_number) }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          gist_name: megaphone-feeds-test-results.md
+          gist_badge_label: 'Megaphone Feeds %Counters_passed%/%Counters_total%'
+          gist_token: ${{ secrets.GIST_TOKEN }}
+          set_check_status_from_test_outcome: true
