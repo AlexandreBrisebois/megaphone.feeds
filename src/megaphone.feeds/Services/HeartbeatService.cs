@@ -69,7 +69,7 @@ namespace Megaphone.Feeds.Services
                     }).ToList()
                 };
 
-                await daprClient.InvokeMethodAsync(HttpMethod.Put, "api-service", "api/resources", view);
+                await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/resources", view);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Megaphone.Feeds.Services
                             Feeds = entry.Value.Select(f => new FeedView { Display = f.Display, Url = f.Url, Id = f.Id }).ToList()
                         };
 
-                        await daprClient.InvokeMethodAsync(HttpMethod.Put, "api-service", "api/feeds", view);
+                        await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/feeds", view);
 
                         lastUpdated = entry.Updated;
                     }
