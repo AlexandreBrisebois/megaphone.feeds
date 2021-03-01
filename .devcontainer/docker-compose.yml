@@ -45,8 +45,8 @@ services:
 
   # Dapr will not initialize a Redis host if a custom redis host name is specified, so start one manually.
   # https://github.com/dapr/cli/issues/418
-  dapr_redis:
-    image: 'redis:latest'
+  # dapr_redis:
+  #   image: 'redis:latest'
 
 networks: 
   default:
