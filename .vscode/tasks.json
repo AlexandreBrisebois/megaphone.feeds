@@ -42,12 +42,10 @@
             "label": "daprd-debug",
             "command": "daprd",
             "args": [
-                "-app-id",
-                "feeds",
-                "-components-path",
-                "${workspaceFolder}/components",
-                "-app-port",
-                "5000"
+                "-app-id","feeds",
+                "-components-path","${workspaceFolder}/components",
+                "-app-port","5000",
+                "-app-max-concurrency", "1"
             ],
             "isBackground": true,
             "problemMatcher": {
