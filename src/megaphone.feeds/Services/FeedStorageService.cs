@@ -40,7 +40,7 @@ namespace Megaphone.Feeds.Services
             }
             else
             {
-                await client.SaveStateAsync(STATE_STORE, $"{partitionKey}/{contentKey}", content);
+                await client.SaveStateAsync(STATE_STORE, $"feeds/{partitionKey}/{contentKey}", content);
             }
         }
     }
