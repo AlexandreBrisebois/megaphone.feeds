@@ -39,13 +39,43 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "daprd-debug",
+            "label": "daprd-debug-sql",
+            "command": "daprd",
+            "dependsOn": "build",
+            "args": [
+                "-app-id",
+                "feeds",
+                "-components-path",
+                "${workspaceFolder}/components/debug-sql",
+                "-app-port",
+                "5000"
+            ],
+            "isBackground": true,
+            "problemMatcher": {
+                "pattern": [
+                    {
+                        "regexp": ".",
+                        "file": 1,
+                        "location": 2,
+                        "message": 3
+                    }
+                ],
+                "background": {
+                    "beginsPattern": "^.*starting Dapr Runtime.*",
+                    "endsPattern": "^.*waiting on port.*"
+                }
+            }
+        },{
+            "label": "daprd-debug-redis",
+            "dependsOn": "build",
             "command": "daprd",
             "args": [
-                "-app-id","feeds",
-                "-components-path","${workspaceFolder}/components",
-                "-app-port","5000",
-                "-app-max-concurrency", "1"
+                "-app-id",
+                "feeds",
+                "-components-path",
+                "${workspaceFolder}/components/debug-redis",
+                "-app-port",
+                "5000"
             ],
             "isBackground": true,
             "problemMatcher": {

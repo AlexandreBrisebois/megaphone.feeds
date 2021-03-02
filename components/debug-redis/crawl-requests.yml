@@ -1,13 +1,13 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: feed-requests
+  name: crawl-requests
   namespace: default
 spec:
   type: bindings.rabbitmq
   metadata:
   - name: queueName
-    value: "feed-requests"
+    value: "crawl-requests"
   - name: host
     value: "amqp://guest:guest@rabbitmq:5672"
   - name: durable
@@ -16,5 +16,3 @@ spec:
     value: "true"
   - name: ttlInSeconds
     value: 600
-scope:
-  - crawler

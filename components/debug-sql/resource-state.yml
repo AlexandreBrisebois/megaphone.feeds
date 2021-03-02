@@ -1,0 +1,14 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: resource-state
+spec:
+  type: state.sqlserver
+  version: v1
+  metadata:
+  - name: connectionString
+    value: "Server=192.168.86.50;Database=megaphone;User Id=sa;Password=Qwerty1!;"
+  - name: tableName
+    value: "resource_state"
+  - name: keyType 
+    value: "string"

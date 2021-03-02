@@ -16,5 +16,3 @@ spec:
     value: "true"
   - name: ttlInSeconds
     value: 600
-scope:
-  - crawler
