@@ -7,12 +7,6 @@ volumes:
   rabbitmq_volume:
 services:
   ############################
-  # Redis
-  ############################
-  dapr_redis:
-    image: 'redis:latest'
-    container_name: dapr_redis
-  ############################
   # RabbitMQ
   ############################
   rabbitmq:

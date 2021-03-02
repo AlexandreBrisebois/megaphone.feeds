@@ -28,7 +28,6 @@ services:
       - "20004:7777" # profile-port
     depends_on: 
       - resources
-      - placement
   crawler-dapr:
     container_name: crawler-dapr
     restart: always
@@ -41,7 +40,7 @@ services:
      "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
-        - "../../components/debug-redis/:/components"
+      - "./components/debug-sql/:/components"
     depends_on:
       - crawler
     network_mode: "service:crawler"
@@ -67,8 +66,6 @@ services:
      - "10002:3500" # dapr-http-port 
      - "10003:9090" # metrics-port
      - "10004:7777" # profile-port
-    depends_on: 
-      - placement
   resources-dapr:
     container_name: resources-dapr
     restart: always
@@ -81,7 +78,7 @@ services:
      "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
-        - "./components/:/components"
+      - "./components/debug-sql/:/components"
     depends_on:
       - resources
     network_mode: "service:resources" 
@@ -107,8 +104,6 @@ services:
       - "40002:3500" # dapr-http-port 
       - "40003:9090" # metrics-port
       - "40004:7777" # profile-port
-    depends_on: 
-      - placement
   api-dapr:
     container_name: api-dapr
     restart: always
@@ -121,16 +116,7 @@ services:
      "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
-        - "../../components/debug-redis/:/components"
+      - "./components/debug-sql/:/components"
     depends_on:
       - api
     network_mode: "service:api"
-  ############################
-  # Dapr placement service
-  ############################
-  placement:
-    image: "daprio/dapr"
-    container_name: placement
-    command: ["./placement", "-port", "50006"]
-    ports:
-      - "50006:50006"

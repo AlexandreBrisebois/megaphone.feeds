@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "deploy infra"
-docker-compose -p dev-infra -f docker-compose-infra.yml up -d
+docker-compose -f docker-compose-infra.yml up -d --force-recreate
 
 echo "deploy app"
-docker-compose -p megaphoneresources_devcontainer -f docker-compose-app.yml up -d
+docker-compose -f docker-compose-app.yml up -d --force-recreate

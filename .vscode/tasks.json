@@ -46,7 +46,7 @@
                 "-app-id",
                 "feeds",
                 "-components-path",
-                "${workspaceFolder}/components/debug-sql",
+                "${workspaceFolder}/deploy/local/components/debug-sql",
                 "-app-port",
                 "5000"
             ],
@@ -73,7 +73,7 @@
                 "-app-id",
                 "feeds",
                 "-components-path",
-                "${workspaceFolder}/components/debug-redis",
+                "${workspaceFolder}/deploy/local/components/debug-redis",
                 "-app-port",
                 "5000"
             ],

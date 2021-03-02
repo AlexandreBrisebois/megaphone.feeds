@@ -1,0 +1,74 @@
+@api = localhost:3500
+
+### List Resources for Today
+GET http://{{api}}/v1.0/invoke/api/method/api/resources/
+
+
+### List Resources by Month
+GET http://{{api}}/v1.0/invoke/api/method/api/resources/2021/1
+
+### List Resources by Month
+GET http://{{api}}/v1.0/invoke/api/method/api/resources/2021/2
+
+
+
+### List Resources by Specific Date
+GET http://{{api}}/v1.0/invoke/api/method/api/resources/2021/3/1
+
+### List Resources by Specific Date
+GET http://{{api}}/v1.0/invoke/api/method/api/resources/2020/2/28
+
+### List Resources by Specific Date
+GET http://{{api}}/v1.0/invoke/api/method/api/resources/2020/2/2
+
+
+
+### List Feeds
+GET http://{{api}}/v1.0/invoke/api/method/api/feeds
+
+
+### Add Azure roadmap
+POST http://{{api}}/v1.0/invoke/api/method/api/feeds
+Content-Type: application/json
+
+{
+    "url": "https://azure.microsoft.com/en-us/roadmap/feed/"
+}
+
+### Remove item from Watch feed
+DELETE http://{{api}}/v1.0/invoke/api/method/api/feeds/740f3d2f-2eb2-50e4-b695-aeed86dfe674
+
+### Add item to Watch feed
+POST http://{{api}}/v1.0/invoke/api/method/api/feeds
+Content-Type: application/json
+
+{
+    "url": "https://devblogs.microsoft.com/dotnet/feed/"
+}
+
+### Remove item from Watch feed
+DELETE http://{{api}}/v1.0/invoke/api/method/api/feeds/c50f7543-6b69-5e46-ae5e-bf0b82dede0e
+
+
+### Add item to Watch feed
+POST http://{{api}}/v1.0/invoke/api/method/api/feeds
+Content-Type: application/json
+
+{
+    "url": "https://azure.microsoft.com/en-us/blog/feed/"
+}
+
+### remove azure blog 
+DELETE http://{{api}}/v1.0/invoke/api/method/api/feeds/466ca634-f0b6-5d29-9e8c-e04ab08a9a22
+
+
+### Add item to Watch feed
+POST http://{{api}}/v1.0/invoke/api/method/api/feeds
+Content-Type: application/json
+
+{
+    "url": "https://cloudblogs.microsoft.com/opensource/feed/"
+}
+
+### Remove OSS
+DELETE http://{{api}}/v1.0/invoke/api/method/api/feeds/013f232c-b274-56fe-8feb-a037535d2dd4
