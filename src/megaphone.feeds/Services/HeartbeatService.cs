@@ -44,7 +44,7 @@ namespace Megaphone.Feeds.Services
             },
                       null,
                       TimeSpan.Zero,
-                      TimeSpan.FromSeconds(30));
+                      TimeSpan.FromSeconds(5));
 
             return Task.CompletedTask;
         }

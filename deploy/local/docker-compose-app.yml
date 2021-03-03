@@ -9,7 +9,6 @@ services:
   ############################
   crawler:
     container_name: crawler
-    restart: always
     image: ds1520plusregistry.azurecr.io/crawler:latest
     environment:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -29,8 +28,7 @@ services:
     depends_on: 
       - resources
   crawler-dapr:
-    container_name: crawler-dapr
-    restart: always
+    container_name: dapr_crawler
     image: "daprio/daprd:edge"
     command: ["./daprd",
      "-app-id", "crawler",
@@ -49,7 +47,6 @@ services:
   ############################
   resources:
     container_name: resources
-    restart: always
     image: ds1520plusregistry.azurecr.io/resources:1.0.0-preview-10
     environment:
       - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -67,8 +64,7 @@ services:
      - "10003:9090" # metrics-port
      - "10004:7777" # profile-port
   resources-dapr:
-    container_name: resources-dapr
-    restart: always
+    container_name: dapr_resources
     image: "daprio/daprd:edge"
     command: ["./daprd",
      "-app-id", "resources",
@@ -105,7 +101,7 @@ services:
       - "40003:9090" # metrics-port
       - "40004:7777" # profile-port
   api-dapr:
-    container_name: api-dapr
+    container_name: dapr_api
     restart: always
     image: "daprio/daprd:edge"
     command: ["./daprd",

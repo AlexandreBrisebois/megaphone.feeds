@@ -31,7 +31,7 @@ namespace Megaphone.Feeds.Services
         public async Task SetAsync(string partitionKey, string contentKey, StorageEntry<List<Feed>> content)
         {
             content.Updated = DateTimeOffset.UtcNow;
-            if (string.IsNullOrEmpty(trackedEtag))
+            if (!string.IsNullOrEmpty(trackedEtag))
             {
                 var stateSaved = await client.TrySaveStateAsync(STATE_STORE, $"feeds/{partitionKey}/{contentKey}", content, trackedEtag);
                 if (stateSaved)
