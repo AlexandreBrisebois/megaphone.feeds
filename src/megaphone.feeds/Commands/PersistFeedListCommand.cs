@@ -23,7 +23,7 @@ namespace Feeds.API.Commands
             await model.SetAsync("feed", "list.json", entry);
 
             if (Debugger.IsAttached)
-                Console.WriteLine($"feeds updatd : \"list.json");
+                Console.WriteLine($"feeds updated : \"list.json\"");
         }
     }
 }
