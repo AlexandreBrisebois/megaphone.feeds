@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Services;
@@ -18,7 +20,10 @@ namespace Feeds.API.Commands
 
         public async Task ApplyAsync(IPartionedStorageService<StorageEntry<List<Feed>>> model)
         {
-           await model.SetAsync("feed", "list.json", entry);
+            await model.SetAsync("feed", "list.json", entry);
+
+            if (Debugger.IsAttached)
+                Console.WriteLine($"feeds updatd : \"list.json");
         }
     }
 }

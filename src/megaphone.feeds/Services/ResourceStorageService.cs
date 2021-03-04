@@ -21,7 +21,7 @@ namespace Megaphone.Feeds.Services
 
         public async Task<StorageEntry<List<Resource>>> GetAsync(string partitionKey, string contentKey)
         {
-            string key = $"resources/{partitionKey}/{contentKey}";
+            string key = $"{partitionKey}/{contentKey}";
             var (value, etag) = await client.GetStateAndETagAsync<StorageEntry<List<Resource>>>(STATE_STORE, key);
             trackedEtags[key] = etag;
 
@@ -30,7 +30,7 @@ namespace Megaphone.Feeds.Services
 
         public async Task SetAsync(string partitionKey, string contentKey, StorageEntry<List<Resource>> content)
         {
-            string key = $"resources/{partitionKey}/{contentKey}";
+            string key = $"{partitionKey}/{contentKey}";
 
             content.Updated = DateTimeOffset.UtcNow;
 

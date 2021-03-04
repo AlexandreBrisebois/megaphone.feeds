@@ -6,6 +6,8 @@ using Feeds.API.Commands;
 using Megaphone.Standard.Commands;
 using Megaphone.Standard.Services;
 using Megaphone.Feeds.Queries;
+using System;
+using System.Diagnostics;
 
 namespace Megaphone.Feeds.Commands
 {
@@ -32,6 +34,9 @@ namespace Megaphone.Feeds.Commands
 
                 var c = new PersistFeedListCommand(entry);
                 await c.ApplyAsync(model);
+
+                if (Debugger.IsAttached)
+                    Console.WriteLine($"feed update : \"{i.Display}\" ({i.LastCrawled.ToString("s")})");
             }
         }
 

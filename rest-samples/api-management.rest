@@ -1,0 +1,14 @@
+GET https://6cf39337225e.ngrok.io/v1.0/invoke/api-service/method/api/feeds
+
+
+### List Feeds
+GET https://megaphone.azure-api.net/api/feeds
+
+### List Today's Resources 
+GET https://megaphone.azure-api.net/api/resources
+
+### List This Month's Resources 
+GET https://megaphone.azure-api.net/api/resources/2020/07
+
+### List Resources by Date
+GET https://megaphone.azure-api.net/api/resources/2020/07/07

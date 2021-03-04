@@ -6,6 +6,8 @@ using Feeds.API.Commands;
 using Megaphone.Standard.Commands;
 using Megaphone.Standard.Services;
 using Megaphone.Feeds.Queries;
+using System.Diagnostics;
+using System;
 
 namespace Megaphone.Feeds.Commands
 {
@@ -41,10 +43,13 @@ namespace Megaphone.Feeds.Commands
                 {
                     entry.Value.Add(resource);
                 }
+
+                if (Debugger.IsAttached)
+                    Console.WriteLine($"resource update : \"{i.Display}\" ({i.Published.ToString("s")})");
             }
 
             var c = new PersistResourceListCommand(resource.Published, entry);
-            await c.ApplyAsync(model);
+            await c.ApplyAsync(model);           
         }
 
         static bool IsNotDefault(Resource r)

@@ -1,0 +1,8 @@
+@resources-service = 127.0.0.1:5380
+@resource-id = 740f3d2f-2eb2-50e4-b695-aeed86dfe674
+
+### Update Resource
+PUT http://{{resources-service}}/v1.0/actors/ResourceActor/{{resource-id}}/method/UpdateAsync
+Content-Type: application/json
+
+{"id":"740f3d2f-2eb2-50e4-b695-aeed86dfe674","display":"Azure service updates","statusCode":200,"created":"2020-06-23T03:48:02.2274477+00:00","isActive":true,"type":1,"description":"Azure service updates","self":"https://azure.microsoft.com/en-us/roadmap/feed/","published":"0001-01-01T00:00:00"}

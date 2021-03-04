@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -70,6 +71,9 @@ namespace Megaphone.Feeds.Services
                 };
 
                 await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/resources", view);
+
+                if (Debugger.IsAttached)
+                    Console.WriteLine($"Pushed ({d.ToShortDateString()}) Resource View to API Service");
             }
         }
 
@@ -102,6 +106,9 @@ namespace Megaphone.Feeds.Services
                         };
 
                         await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/feeds", view);
+
+                        if (Debugger.IsAttached)
+                            Console.WriteLine($"Pushed Feed View to API Service");
 
                         lastUpdated = entry.Updated;
                     }

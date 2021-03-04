@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using Megaphone.Feeds.Services;
 using Megaphone.Feeds.Models;
+using System.Diagnostics;
 
 namespace Feeds.API.Commands
 {
@@ -24,6 +25,9 @@ namespace Feeds.API.Commands
         public async Task ApplyAsync(IPartionedStorageService<StorageEntry<List<Resource>>> model)
         {
             await model.SetAsync(partitionKey, CONTENT_KEY, entry);
+
+             if (Debugger.IsAttached)
+                Console.WriteLine($"resources updatd : \"{CONTENT_KEY})");
         }
     }
 }
