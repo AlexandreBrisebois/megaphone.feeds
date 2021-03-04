@@ -38,7 +38,7 @@ services:
      "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
-      - "./components/debug-sql/:/components"
+      - "./components/debug-synology/:/components"
     depends_on:
       - crawler
     network_mode: "service:crawler"
@@ -74,7 +74,7 @@ services:
      "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
-      - "./components/debug-sql/:/components"
+      - "./components/debug-synology/:/components"
     depends_on:
       - resources
     network_mode: "service:resources" 
@@ -112,7 +112,7 @@ services:
      "-placement-host-address", "placement:50006",
      "-components-path", "/components"]
     volumes:
-      - "./components/debug-sql/:/components"
+      - "./components/debug-synology/:/components"
     depends_on:
       - api
     network_mode: "service:api"

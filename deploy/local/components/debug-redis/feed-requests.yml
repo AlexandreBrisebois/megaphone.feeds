@@ -3,15 +3,9 @@ kind: Component
 metadata:
   name: feed-requests
 spec:
-  type: bindings.rabbitmq
+  type: bindings.redis
   metadata:
-  - name: queueName
-    value: "feed-requests"
-  - name: host
-    value: "amqp://guest:guest@rabbitmq:5672"
-  - name: durable
-    value: "true"
-  - name: deletedWhenUnused
-    value: "true"
-  - name: ttlInSeconds
-    value: 600
+  - name: redisHost
+    value: dapr_redis:6379
+  - name: redisPassword
+    value: ""

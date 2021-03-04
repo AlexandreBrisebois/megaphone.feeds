@@ -39,14 +39,14 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "daprd-debug-sql",
+            "label": "daprd-debug-synology",
             "command": "daprd",
             "dependsOn": "build",
             "args": [
                 "-app-id",
                 "feeds",
                 "-components-path",
-                "${workspaceFolder}/deploy/local/components/debug-sql",
+                "${workspaceFolder}/deploy/local/components/debug-synology",
                 "-app-port",
                 "5000"
             ],

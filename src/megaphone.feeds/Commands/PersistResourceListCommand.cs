@@ -3,9 +3,9 @@ using Megaphone.Standard.Commands;
 using Megaphone.Standard.Services;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 using Megaphone.Feeds.Services;
 using Megaphone.Feeds.Models;
-using System.Diagnostics;
 
 namespace Feeds.API.Commands
 {
@@ -27,7 +27,7 @@ namespace Feeds.API.Commands
             await model.SetAsync(partitionKey, CONTENT_KEY, entry);
 
              if (Debugger.IsAttached)
-                Console.WriteLine($"resources updatd : \"{CONTENT_KEY})");
+                Console.WriteLine($"resources updated : \"{CONTENT_KEY}\"");
         }
     }
 }

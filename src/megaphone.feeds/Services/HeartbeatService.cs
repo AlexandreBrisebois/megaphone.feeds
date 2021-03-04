@@ -70,7 +70,7 @@ namespace Megaphone.Feeds.Services
                     }).ToList()
                 };
 
-                await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/resources", view);
+                await daprClient.InvokeMethodAsync(HttpMethod.Post, "api", "api/resources", view);
 
                 if (Debugger.IsAttached)
                     Console.WriteLine($"Pushed ({d.ToShortDateString()}) Resource View to API Service");

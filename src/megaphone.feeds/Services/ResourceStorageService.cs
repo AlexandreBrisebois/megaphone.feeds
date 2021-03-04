@@ -34,7 +34,7 @@ namespace Megaphone.Feeds.Services
 
             content.Updated = DateTimeOffset.UtcNow;
 
-            if (trackedEtags.ContainsKey(key))
+            if (trackedEtags.ContainsKey(key) && !string.IsNullOrEmpty(trackedEtags[key]))
             {
                 var stateSaved = await client.TrySaveStateAsync(STATE_STORE, key, content, trackedEtags[key]);
                 if (stateSaved)

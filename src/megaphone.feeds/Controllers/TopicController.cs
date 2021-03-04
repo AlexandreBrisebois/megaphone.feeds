@@ -27,8 +27,8 @@ namespace megaphone.feeds.Controllers
             this.resourceTracker = resourceTracker;
         }
 
-        [Topic("resource-events", "resource-events")]
         [HttpPost("resource-updates")]
+        [Topic("resource-events", "resource-events")]
         public async Task<IActionResult> PostAsync(Event e)
         {
             if (e.Name == Events.Resource.Update)

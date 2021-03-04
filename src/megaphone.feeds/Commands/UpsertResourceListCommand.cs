@@ -28,6 +28,10 @@ namespace Megaphone.Feeds.Commands
             if (!entry.HasValue)
             {
                 entry.Value = new List<Resource> { resource };
+
+                if (Debugger.IsAttached)
+                    Console.WriteLine($"resource update : \"{resource.Display}\" ({resource.Published.ToString("s")})");
+               
             }
             else
             {
@@ -38,14 +42,17 @@ namespace Megaphone.Feeds.Commands
                     i.IsActive = resource.IsActive;
                     i.Updated = resource.Updated;
                     i.Published = resource.Published;
+
+                    if (Debugger.IsAttached)
+                        Console.WriteLine($"resource update : \"{i.Display}\" ({i.Published.ToString("s")})");
                 }
                 else
                 {
                     entry.Value.Add(resource);
-                }
 
-                if (Debugger.IsAttached)
-                    Console.WriteLine($"resource update : \"{i.Display}\" ({i.Published.ToString("s")})");
+                    if (Debugger.IsAttached)
+                        Console.WriteLine($"resource update : \"{resource.Display}\" ({resource.Published.ToString("s")})");
+                }                
             }
 
             var c = new PersistResourceListCommand(resource.Published, entry);
