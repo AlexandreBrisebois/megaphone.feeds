@@ -54,7 +54,6 @@ namespace Megaphone.Feeds.Controllers
 
             entry.Value = entry.Value.Where(i => i.Id != e.Metadata.GetValueOrDefault("id")).ToList();
 
-
             var c = new PersistFeedListCommand(entry);
             await c.ApplyAsync(feedStorageService);
         }
