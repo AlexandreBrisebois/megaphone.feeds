@@ -73,7 +73,7 @@ namespace Megaphone.Feeds.Services
                 await daprClient.InvokeMethodAsync(HttpMethod.Post, "api", "api/resources", view);
 
                 if (Debugger.IsAttached)
-                    Console.WriteLine($"Pushed ({d.ToShortDateString()}) Resource View to API Service");
+                    Console.WriteLine($"-> | published ({d.ToShortDateString()}) resource to API service");
             }
         }
 
@@ -108,7 +108,7 @@ namespace Megaphone.Feeds.Services
                         await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/feeds", view);
 
                         if (Debugger.IsAttached)
-                            Console.WriteLine($"Pushed Feed View to API Service");
+                            Console.WriteLine($"-> | published Feeds to API service");
 
                         lastUpdated = entry.Updated;
                     }

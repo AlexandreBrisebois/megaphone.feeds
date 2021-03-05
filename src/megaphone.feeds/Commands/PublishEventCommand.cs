@@ -26,7 +26,7 @@ namespace Feeds.API.Commands
             await model.PublishEventAsync(pubsubName, topic, content);
 
             if (Debugger.IsAttached)
-                Console.WriteLine($"published event : \"{JsonSerializer.Serialize(content)}\"");
+                Console.WriteLine($"-> | published event to \"{topic}\" > \"{JsonSerializer.Serialize(content)}\"");
         }
     }
 }

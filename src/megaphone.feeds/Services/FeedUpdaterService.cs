@@ -56,7 +56,7 @@ namespace Megaphone.Feeds.Services
                     await c.ApplyAsync(daprClient);
 
                     if (Debugger.IsAttached)
-                        Console.WriteLine($"-> | sent crawl request : \"{f.Display}\"");
+                        Console.WriteLine($"-> | sent crawl request : \"{f.Display}\" : {f.Url}");
                 }
             }
             catch

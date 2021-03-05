@@ -36,7 +36,7 @@ namespace Megaphone.Feeds.Commands
                 await c.ApplyAsync(model);
 
                 if (Debugger.IsAttached)
-                    Console.WriteLine($"feed update : \"{i.Display}\" ({i.LastCrawled.ToString("s")})");
+                    Console.WriteLine($"[] | feed update : \"{i.Display}\" ({i.LastCrawled.ToString("s")})");
             }
         }
 

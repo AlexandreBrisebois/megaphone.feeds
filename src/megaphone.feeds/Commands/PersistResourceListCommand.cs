@@ -27,7 +27,7 @@ namespace Feeds.API.Commands
             await model.SetAsync(partitionKey, CONTENT_KEY, entry);
 
              if (Debugger.IsAttached)
-                Console.WriteLine($"resources updated : \"{CONTENT_KEY}\"");
+                Console.WriteLine($"-> | persisted updated resources : \"{CONTENT_KEY}\"");
         }
     }
 }
