@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace megaphone.feeds
 {
@@ -26,6 +27,10 @@ namespace megaphone.feeds
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Megaphone Feeds", Version = "v1" });
             });
+
+            string key = Environment.GetEnvironmentVariable("INSTRUMENTATION_KEY");
+            if (!string.IsNullOrEmpty(key))
+                services.AddApplicationInsightsTelemetry(key);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

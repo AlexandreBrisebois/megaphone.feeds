@@ -4,13 +4,20 @@
     <TargetFramework>net5.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <RootNamespace>Megaphone.Feeds</RootNamespace>
+    <UserSecretsId>da511a3d-475a-4a0d-9714-a6c41e9f2b6e</UserSecretsId>
+    <ApplicationInsightsResourceId>/subscriptions/dfbedef7-25e7-4450-8526-650ca03208ee/resourceGroups/ds1520plus/providers/microsoft.insights/components/ds1520plus-megaphone-app-insights</ApplicationInsightsResourceId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapr.AspNetCore" Version="1.0.0" />
     <PackageReference Include="Megaphone.Standard" Version="1.0.7" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\ServiceDependencies\local\" />
   </ItemGroup>
 
 </Project>
