@@ -1,6 +1,5 @@
 ﻿namespace Megaphone.Feeds.Events
 {
-
     public static class Events
     {
         public static class Feed

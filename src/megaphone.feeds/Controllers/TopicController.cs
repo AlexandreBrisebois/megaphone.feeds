@@ -6,9 +6,10 @@ using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Services;
 using Megaphone.Standard.Events;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Threading.Tasks;
 
-namespace megaphone.feeds.Controllers
+namespace Megaphone.Feeds.Controllers
 {
     [ApiController]
     [Route("/")]
@@ -27,11 +28,12 @@ namespace megaphone.feeds.Controllers
             this.resourceTracker = resourceTracker;
         }
 
-        [HttpPost("resource-updates")]
+        [HttpPost("resource-events")]
         [Topic("resource-events", "resource-events")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> PostAsync(Event e)
         {
-            if (e.Name == Events.Resource.Update)
+            if (e.Name == Events.Events.Resource.Update)
             {
                 if (e.TryConvertToFeed(out var f))
                     await UpdateFeed(f);

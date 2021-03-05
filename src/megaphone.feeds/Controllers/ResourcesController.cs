@@ -5,24 +5,26 @@ using Megaphone.Feeds.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
-namespace megaphone.feeds.Controllers
+namespace Megaphone.Feeds.Controllers
 {
     [ApiController]
     [Route("/api/resources")]
     public class ResourcesController : ControllerBase
     {
-        [Route("{year}/{month}/{day}")]
         [HttpGet]
-        public async Task<JsonResult> GetAsync([FromServices] DaprClient daprClient, int year, int month, int day)
+        [Route("{year}/{month}/{day}")]
+        [ProducesResponseType(typeof(List<Resource>),(int)HttpStatusCode.OK)]
+        public async Task<List<Resource>> GetAsync([FromServices] DaprClient daprClient, int year, int month, int day)
         {
             var storage = new ResourceStorageService(daprClient);
 
             var q = new GetResourceListQuery(new DateTime(year, month, day));
             var entry = await q.ExecuteAsync(storage);
 
-            return new JsonResult(entry.Value ?? new List<Resource>());
+            return entry.Value ?? new List<Resource>();
         }
     }
 }

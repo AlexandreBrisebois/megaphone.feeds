@@ -1,8 +1,11 @@
 ﻿using Dapr.Client;
+using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace megaphone.feeds.Controllers
@@ -18,26 +21,28 @@ namespace megaphone.feeds.Controllers
             feedStorageService = new FeedStorageService(daprClient);
         }
 
-        [Route("")]
         [HttpGet]
-        public async Task<JsonResult> GetAsync()
+        [Route("")]
+        [ProducesResponseType(typeof(List<Feed>), (int)HttpStatusCode.OK)]
+        public async Task<List<Feed>> GetAsync()
         {
             var q = new GetFeedListQuery();
             var entry = await q.ExecuteAsync(feedStorageService);
 
-            return new JsonResult(entry.Value);
+            return entry.Value;
         }
 
-        [Route("{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetAsync(string id)
+        [Route("{id}")]
+        [ProducesResponseType(typeof(Feed), (int)HttpStatusCode.OK)]
+        public async Task<Feed> GetAsync(string id)
         {
             var q = new GetFeedListQuery();
             var entry = await q.ExecuteAsync(feedStorageService);
 
             var feed = entry.Value.FirstOrDefault(i => i.Id == id);
 
-            return new JsonResult(feed);
+            return feed;
         }
     }
 }

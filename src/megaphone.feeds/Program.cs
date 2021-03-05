@@ -19,7 +19,8 @@ namespace megaphone.feeds
                     webBuilder.UseStartup<Startup>();
                 }).ConfigureServices(services =>
                 {
-                    services.AddHostedService<HeartbeatService>();
+                    services.AddHostedService<FeedUpdaterService>();
+                    services.AddHostedService<PublishshingService>();
                 });
     }
 }

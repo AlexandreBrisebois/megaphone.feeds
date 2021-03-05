@@ -22,6 +22,13 @@ namespace Feeds.API.Commands
             message = MessageBuilder.NewCommand("crawl-request")
                                         .WithParameters("uri", resource.Url)
                                         .Make();
+        } 
+        
+        public SendCrawlRequestCommand(Feed feed)
+        {
+            message = MessageBuilder.NewCommand("crawl-request")
+                                        .WithParameters("uri", feed.Url)
+                                        .Make();
         }
 
         public async Task ApplyAsync(DaprClient model)

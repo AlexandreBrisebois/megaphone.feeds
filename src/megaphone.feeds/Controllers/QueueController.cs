@@ -1,6 +1,5 @@
 ﻿using Dapr.Client;
 using Feeds.API.Commands;
-using Megaphone.Feeds.Events;
 using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
 using Megaphone.Standard.Events;
@@ -9,9 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
-namespace megaphone.feeds.Controllers
+namespace Megaphone.Feeds.Controllers
 {
     [ApiController]
     [Route("/")]
@@ -27,13 +27,14 @@ namespace megaphone.feeds.Controllers
         }
 
         [HttpPost("feed-requests")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> PostAsync(Event e)
         {
-            if (e.Name == Events.Feed.Add)
+            if (e.Name == Events.Events.Feed.Add)
             {
                 await AddFeed(e);
             }
-            else if (e.Name == Events.Feed.Delete)
+            else if (e.Name == Events.Events.Feed.Delete)
             {
                 await DeleteFeed(e);
             }
@@ -48,7 +49,7 @@ namespace megaphone.feeds.Controllers
 
             if (!entry.HasValue)
             {
-                entry.Value = new List<Megaphone.Feeds.Models.Feed>();
+                entry.Value = new List<Models.Feed>();
             }
 
             entry.Value = entry.Value.Where(i => i.Id != e.Metadata.GetValueOrDefault("id")).ToList();
@@ -65,10 +66,10 @@ namespace megaphone.feeds.Controllers
 
             if (!entry.HasValue)
             {
-                entry.Value = new List<Megaphone.Feeds.Models.Feed>();
+                entry.Value = new List<Models.Feed>();
             }
 
-            var feed = new Megaphone.Feeds.Models.Feed
+            var feed = new Models.Feed
             {
                 Url = e.Metadata.GetValueOrDefault("url")
             };
