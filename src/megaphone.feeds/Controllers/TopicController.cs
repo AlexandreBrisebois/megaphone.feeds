@@ -5,7 +5,9 @@ using Megaphone.Feeds.Events;
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Services;
 using Megaphone.Standard.Events;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -17,15 +19,18 @@ namespace Megaphone.Feeds.Controllers
     {
         private readonly ResourceStorageService resourceStorageService;
         private readonly ResourceListChangeTracker resourceTracker;
+        private readonly TelemetryClient telemetryClient;
         private readonly FeedStorageService feedStorageService;
 
         public TopicController([FromServices] DaprClient daprClient,
-                               [FromServices] ResourceListChangeTracker resourceTracker)
+                               [FromServices] ResourceListChangeTracker resourceTracker,
+                               TelemetryClient telemetryClient)
         {
             resourceStorageService = new ResourceStorageService(daprClient);
             feedStorageService = new FeedStorageService(daprClient);
 
             this.resourceTracker = resourceTracker;
+            this.telemetryClient = telemetryClient;
         }
 
         [HttpPost("resource-events")]
@@ -48,6 +53,8 @@ namespace Megaphone.Feeds.Controllers
             var c = new UpsertResourceListCommand(r);
             await c.ApplyAsync(resourceStorageService);
 
+            telemetryClient.TrackEvent(Events.Events.Resource.Update, new Dictionary<string, string> { { "display", r.Display }, { "url", r.Url } });
+
             resourceTracker.AddDate(r.Published);
         }
 
@@ -55,6 +62,9 @@ namespace Megaphone.Feeds.Controllers
         {
             var c = new UpdateFeedListCommand(f);
             await c.ApplyAsync(feedStorageService);
+
+            telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList, new Dictionary<string, string> { { "display", f.Display }, { "url", f.Url } });
+
         }
     }
 }

@@ -1,16 +1,18 @@
 ﻿namespace Megaphone.Feeds.Events
 {
-    public static class Events
+    internal static class Events
     {
-        public static class Feed
+        internal static class Feed
         {
-            public static readonly string Add = "add-feed";
-            public static readonly string Delete = "delete-feed";
+            internal static readonly string Add = "add-feed";
+            internal static readonly string Delete = "delete-feed";
+            internal static readonly string UpdateFeedList = "updated-feed-list";
+            internal static readonly string SentCrawlRequest = "sent-crawl-request";
         }
 
-        public static class Resource
+        internal static class Resource
         {
-            public static readonly string Update = "update-resource";
+            internal static readonly string Update = "update-resource";
         }
     }
 }
