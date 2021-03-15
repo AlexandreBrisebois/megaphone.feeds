@@ -14,8 +14,6 @@ namespace Megaphone.Feeds.Services
 {
     public class FeedUpdaterService : IHostedService, IDisposable
     {
-        DateTimeOffset lastUpdated = DateTimeOffset.MinValue;
-
         private readonly FeedStorageService feedStorageService;
 
         private readonly DaprClient daprClient;
@@ -35,10 +33,7 @@ namespace Megaphone.Feeds.Services
             {
                 var tasks = new[] { TrySendFeedCrawlRequests() };
                 await Task.WhenAll(tasks);
-            },
-                      null,
-                      TimeSpan.Zero,
-                      TimeSpan.FromMinutes(30));
+            }, null, TimeSpan.Zero, TimeSpan.FromMinutes(30));
 
             return Task.CompletedTask;
         }
