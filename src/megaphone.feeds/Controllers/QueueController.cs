@@ -22,7 +22,8 @@ namespace Megaphone.Feeds.Controllers
         private readonly TelemetryClient telemetryClient;
         private readonly FeedStorageService feedStorageService;
 
-        public QueueController([FromServices] DaprClient daprClient, TelemetryClient telemetryClient) : base()
+        public QueueController([FromServices] DaprClient daprClient, 
+                               TelemetryClient telemetryClient) : base()
         {
             this.daprClient = daprClient;
             this.telemetryClient = telemetryClient;

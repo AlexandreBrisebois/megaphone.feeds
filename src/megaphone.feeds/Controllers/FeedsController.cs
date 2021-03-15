@@ -18,7 +18,8 @@ namespace megaphone.feeds.Controllers
         private readonly TelemetryClient telemetryClient;
         private FeedStorageService feedStorageService;
 
-        public FeedsController([FromServices] DaprClient daprClient, TelemetryClient telemetryClient)
+        public FeedsController([FromServices] DaprClient daprClient,
+                               TelemetryClient telemetryClient)
         {
             feedStorageService = new FeedStorageService(daprClient);
             this.telemetryClient = telemetryClient;
