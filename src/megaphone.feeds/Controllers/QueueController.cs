@@ -4,6 +4,7 @@ using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
 using Megaphone.Standard.Events;
 using Megaphone.Standard.Extensions;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,14 @@ namespace Megaphone.Feeds.Controllers
     public class QueueController : ControllerBase
     {
         private readonly DaprClient daprClient;
+        private readonly TelemetryClient telemetryClient;
         private readonly FeedStorageService feedStorageService;
 
-        public QueueController([FromServices] DaprClient daprClient) : base()
+        public QueueController([FromServices] DaprClient daprClient, TelemetryClient telemetryClient) : base()
         {
             this.daprClient = daprClient;
+            this.telemetryClient = telemetryClient;
+
             feedStorageService = new FeedStorageService(daprClient);
         }
 
@@ -33,10 +37,12 @@ namespace Megaphone.Feeds.Controllers
             if (e.Name == Events.Events.Feed.Add)
             {
                 await AddFeed(e);
+                telemetryClient.TrackEvent(Events.Events.Feed.Delete, new Dictionary<string, string> { { Events.Events.Feed.Add, e.Metadata.GetValueOrDefault("url") } });
             }
             else if (e.Name == Events.Events.Feed.Delete)
             {
                 await DeleteFeed(e);
+                telemetryClient.TrackEvent(Events.Events.Feed.Delete, new Dictionary<string, string> { { Events.Events.Feed.Delete, e.Metadata.GetValueOrDefault("id") } });
             }
 
             return Ok();
@@ -79,8 +85,12 @@ namespace Megaphone.Feeds.Controllers
             var c = new PersistFeedListCommand(entry);
             await c.ApplyAsync(feedStorageService);
 
+            telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList);
+
             var publish = new SendCrawlRequestCommand(feed.Url);
             await publish.ApplyAsync(daprClient);
+
+            telemetryClient.TrackEvent(Events.Events.Feed.SentCrawlRequest, new Dictionary<string, string> { { "url", feed.Url } });
         }
     }
 }

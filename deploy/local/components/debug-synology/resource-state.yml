@@ -7,7 +7,7 @@ spec:
   version: v1
   metadata:
   - name: connectionString
-    value: "Server=HD;Database=megaphone;User Id=sa;Password=Qwerty1!;"
+    value: "Server=192.168.1.109;Database=megaphone;User Id=sa;Password=Qwerty1!;"
   - name: tableName
     value: "resource_state"
   - name: keyType 

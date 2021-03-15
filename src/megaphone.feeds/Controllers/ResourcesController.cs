@@ -2,6 +2,7 @@
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,13 @@ namespace Megaphone.Feeds.Controllers
     [Route("/api/resources")]
     public class ResourcesController : ControllerBase
     {
+        private readonly TelemetryClient telemetryClient;
+
+        public ResourcesController(TelemetryClient telemetryClient)
+        {
+            this.telemetryClient = telemetryClient;
+        }
+
         [HttpGet]
         [Route("{year}/{month}/{day}")]
         [ProducesResponseType(typeof(List<Resource>),(int)HttpStatusCode.OK)]

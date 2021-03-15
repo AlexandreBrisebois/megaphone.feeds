@@ -2,6 +2,7 @@
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,13 @@ namespace megaphone.feeds.Controllers
     [Route("/api/feeds")]
     public class FeedsController : ControllerBase
     {
+        private readonly TelemetryClient telemetryClient;
         private FeedStorageService feedStorageService;
 
-        public FeedsController([FromServices] DaprClient daprClient)
+        public FeedsController([FromServices] DaprClient daprClient, TelemetryClient telemetryClient)
         {
             feedStorageService = new FeedStorageService(daprClient);
+            this.telemetryClient = telemetryClient;
         }
 
         [HttpGet]

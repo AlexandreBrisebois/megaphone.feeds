@@ -1,6 +1,7 @@
 ﻿using Dapr.Client;
 using Megaphone.Feeds.Models.Views;
 using Megaphone.Feeds.Queries;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -21,59 +22,77 @@ namespace Megaphone.Feeds.Services
         private readonly ResourceStorageService resourceStorageService;
 
         private readonly ResourceListChangeTracker resourceTracker;
+        private readonly TelemetryClient telemetryClient;
 
         private readonly DaprClient daprClient;
 
         private Timer timer;
 
         public PublishshingService([FromServices] DaprClient daprClient,
-                                   [FromServices] ResourceListChangeTracker resourceTracker)
+                                   [FromServices] ResourceListChangeTracker resourceTracker,
+                                   TelemetryClient telemetryClient)
         {
             feedStorageService = new FeedStorageService(daprClient);
             resourceStorageService = new ResourceStorageService(daprClient);
 
             this.daprClient = daprClient;
             this.resourceTracker = resourceTracker;
+            this.telemetryClient = telemetryClient;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
         {
             timer = new Timer(async state =>
             {
+                telemetryClient.TrackEvent("publishing-service-cycle-start");
+
                 var tasks = new[] { TryPushFeedUpdates(), TryPushResourceListUpdates() };
                 await Task.WhenAll(tasks);
+
+                telemetryClient.TrackEvent("publishing-service-cycle-end");
             },
                       null,
                       TimeSpan.Zero,
                       TimeSpan.FromSeconds(5));
+
+            telemetryClient.TrackEvent("started-publishing-service");
 
             return Task.CompletedTask;
         }
 
         private async Task TryPushResourceListUpdates()
         {
-            List<DateTime> dates = GetDates();
-
-            foreach (var d in dates)
+            try
             {
-                var q = new GetResourceListQuery(d);
-                var entry = await q.ExecuteAsync(resourceStorageService);
+                List<DateTime> dates = GetDates();
 
-                var view = new ResourceListView
+                foreach (var d in dates)
                 {
-                    Date = d,
-                    Resources = entry.Value.Select(r => new ResourceView
+                    var q = new GetResourceListQuery(d);
+                    var entry = await q.ExecuteAsync(resourceStorageService);
+
+                    var view = new ResourceListView
                     {
-                        Display = r.Display,
-                        Url = r.Url,
-                        Id = r.Id
-                    }).ToList()
-                };
+                        Date = d,
+                        Resources = entry.Value.Select(r => new ResourceView
+                        {
+                            Display = r.Display,
+                            Url = r.Url,
+                            Id = r.Id
+                        }).ToList()
+                    };
 
-                await daprClient.InvokeMethodAsync(HttpMethod.Post, "api", "api/resources", view);
+                    await daprClient.InvokeMethodAsync(HttpMethod.Post, "api", "api/resources", view);
 
-                if (Debugger.IsAttached)
-                    Console.WriteLine($"-> | published ({d.ToShortDateString()}) resource to API service");
+                    telemetryClient.TrackEvent("publish-resources-to-api-service", new Dictionary<string, string> { { "date", d.ToShortDateString() } });
+
+                    if (Debugger.IsAttached)
+                        Console.WriteLine($"-> | published ({d.ToShortDateString()}) resource to API service");
+                }
+            }
+            catch (Exception ex)
+            {
+                telemetryClient.TrackException(ex);
             }
         }
 
@@ -107,6 +126,8 @@ namespace Megaphone.Feeds.Services
 
                         await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/feeds", view);
 
+                        telemetryClient.TrackEvent("publish-feeds-to-api-service");
+
                         if (Debugger.IsAttached)
                             Console.WriteLine($"-> | published Feeds to API service");
 
@@ -114,15 +135,17 @@ namespace Megaphone.Feeds.Services
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // nothing
+                telemetryClient.TrackException(ex);
             }
         }
 
         public Task StopAsync(CancellationToken stoppingToken)
         {
             timer?.Change(Timeout.Infinite, 0);
+
+            telemetryClient.TrackEvent("stopped-publishing-service");
 
             return Task.CompletedTask;
         }
