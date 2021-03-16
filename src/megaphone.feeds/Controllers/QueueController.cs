@@ -94,14 +94,14 @@ namespace Megaphone.Feeds.Controllers
             }
             else
             {
-                var newFeed = new Models.Feed
+                feed = new Models.Feed
                 {
                     Url = url,
                     Display = display,
                     Id = id
                 };
 
-                entry.Value.Add(newFeed);
+                entry.Value.Add(feed);
             }         
 
             var c = new PersistFeedListCommand(entry);
