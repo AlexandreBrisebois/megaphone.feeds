@@ -32,13 +32,21 @@ namespace Megaphone.Feeds.Commands
                 i.LastHttpStatus = feed.LastHttpStatus;
                 i.Display = feed.Display;
 
-                var c = new PersistFeedListCommand(entry);
-                await c.ApplyAsync(model);
+                if (Debugger.IsAttached)
+                    Console.WriteLine($"[] | feed updated : \"{feed.Display}\" ({feed.LastCrawled.ToString("s")})");
+            }
+            else
+            {
+                entry.Value.Add(feed);
 
                 if (Debugger.IsAttached)
-                    Console.WriteLine($"[] | feed update : \"{i.Display}\" ({i.LastCrawled.ToString("s")})");
+                    Console.WriteLine($"[] | feed added : \"{feed.Display}\" ({feed.LastCrawled.ToString("s")})");
             }
-        }
+
+            var c = new PersistFeedListCommand(entry);
+            await c.ApplyAsync(model);
+
+             }
 
         static bool IsNotDefault(Feed f)
         {

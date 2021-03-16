@@ -28,6 +28,7 @@ namespace Feeds.API.Commands
         {
             message = MessageBuilder.NewCommand("crawl-request")
                                         .WithParameters("uri", feed.Url)
+                                        .WithParameters("display", feed.Display)
                                         .Make();
         }
 
