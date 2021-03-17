@@ -49,8 +49,8 @@ namespace megaphone.feeds
             }
             else
             {
-                services.AddSingleton<IFeedStorageService, FileStorageFeedStorageService>();
-                services.AddSingleton<IResourceStorageService, FileResourceStorageService>();
+                services.AddSingleton<IFeedStorageService>(new FileStorageFeedStorageService());
+                services.AddSingleton<IResourceStorageService>(new FileResourceStorageService());
             }
 
             if (Debugger.IsAttached)

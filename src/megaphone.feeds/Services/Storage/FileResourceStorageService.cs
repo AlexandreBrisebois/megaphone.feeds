@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Megaphone.Feeds.Services.Storage
 {
-    public abstract class FileResourceStorageService : IResourceStorageService
+    public class FileResourceStorageService : IResourceStorageService
     {
         private string path;
 
