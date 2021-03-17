@@ -1,5 +1,6 @@
 using Megaphone.Feeds.Mocks;
 using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Feeds;
 using Megaphone.Feeds.Services.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

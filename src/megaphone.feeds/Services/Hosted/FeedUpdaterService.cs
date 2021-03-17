@@ -1,6 +1,6 @@
 ﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Models;
-using Megaphone.Feeds.Queries;
+using Megaphone.Feeds.Services.Feeds;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -54,8 +54,7 @@ namespace Megaphone.Feeds.Services.Hosted
         {
             try
             {
-                var q = new GetFeedListQuery();
-                var entry = await q.ExecuteAsync(feedService);
+                var entry = await feedService.GetAsync();
 
                 foreach (var f in entry.Value ?? new List<Feed>())
                 {

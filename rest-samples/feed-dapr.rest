@@ -1,4 +1,4 @@
-@feed-service-daprhttp = localhost:3500 
+@feed-service-daprhttp = HD:40002 
 
 ### post resource feed update event (reset)
 POST http://{{feed-service-daprhttp}}/v1.0/publish/resource-feed-updates

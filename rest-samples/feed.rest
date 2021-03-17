@@ -1,5 +1,6 @@
 @feed-service = localhost:5000 
 
+
 ### post resource feed update event (reset)
 POST http://{{feed-service}}/resource-feed-updates
 Content-Type: application/json

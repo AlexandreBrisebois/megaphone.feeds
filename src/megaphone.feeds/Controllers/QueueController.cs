@@ -1,14 +1,13 @@
 ﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Messages;
-using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Feeds;
 using Megaphone.Standard.Extensions;
 using Megaphone.Standard.Messages;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -58,54 +57,23 @@ namespace Megaphone.Feeds.Controllers
 
         private async Task DeleteFeed(CommandMessage message)
         {
-            var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedService);
-
-            if (!entry.HasValue)
-            {
-                entry.Value = new List<Models.Feed>();
-            }
-
-            entry.Value = entry.Value.Where(i => i.Id != message.Parameters.GetValueOrDefault("id")).ToList();
-
-            var c = new PersistFeedListCommand(entry);
-            await c.ApplyAsync(feedService);
+            await feedService.Delete(message.Parameters.GetValueOrDefault("id"));
         }
 
         private async Task AddFeed(CommandMessage message)
         {
-            var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedService);
-
-            if (!entry.HasValue)
-            {
-                entry.Value = new List<Models.Feed>();
-            }
-
             string url = message.Parameters.GetValueOrDefault("url");
             string id = new Uri(url).ToGuid().ToString();
             string display = message.Parameters.GetValueOrDefault("display");
 
-            var feed = entry.Value.Find(f => f.Id == id);
-
-            if (feed != null)
+            var feed = new Models.Feed
             {
-                feed.Display = display;
-            }
-            else
-            {
-                feed = new Models.Feed
-                {
-                    Url = url,
-                    Display = display,
-                    Id = id
-                };
+                Url = url,
+                Display = display,
+                Id = id
+            };
 
-                entry.Value.Add(feed);
-            }
-
-            var c = new PersistFeedListCommand(entry);
-            await c.ApplyAsync(feedService);
+            await feedService.Update(feed);
 
             telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList);
 

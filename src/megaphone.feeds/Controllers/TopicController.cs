@@ -3,6 +3,7 @@ using Megaphone.Feeds.Commands;
 using Megaphone.Feeds.Events;
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Feeds;
 using Megaphone.Standard.Events;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
@@ -60,8 +61,7 @@ namespace Megaphone.Feeds.Controllers
 
         private async Task UpdateFeed(Feed f)
         {
-            var c = new UpdateFeedListCommand(f);
-            await c.ApplyAsync(feedService);
+            await feedService.Update(f);
 
             telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList, new Dictionary<string, string> { { "display", f.Display }, { "url", f.Url } });
         }

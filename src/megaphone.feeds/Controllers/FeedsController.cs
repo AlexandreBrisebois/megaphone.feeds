@@ -1,6 +1,5 @@
 ﻿using Megaphone.Feeds.Models;
-using Megaphone.Feeds.Queries;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Feeds;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +24,7 @@ namespace megaphone.feeds.Controllers
         [ProducesResponseType(typeof(List<Feed>), (int)HttpStatusCode.OK)]
         public async Task<List<Feed>> GetAsync()
         {
-            var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedService);
+            var entry = await feedService.GetAsync();
 
             return entry.Value;
         }
@@ -36,8 +34,7 @@ namespace megaphone.feeds.Controllers
         [ProducesResponseType(typeof(Feed), (int)HttpStatusCode.OK)]
         public async Task<Feed> GetAsync(string id)
         {
-            var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedService);
+            var entry = await feedService.GetAsync();
 
             var feed = entry.Value.FirstOrDefault(i => i.Id == id);
 
