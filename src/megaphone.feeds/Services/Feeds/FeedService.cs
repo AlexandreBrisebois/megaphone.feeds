@@ -41,7 +41,7 @@ namespace Megaphone.Feeds.Services.Feeds
                 {
                     await SetAsync(new StorageEntry<List<Feed>>() { Value = feeds.Values.ToList() });
 
-                    lastPersisted = clock.Now;
+                    lastPersisted = new DateTime(clock.Now.Ticks);
                 }                   
              }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         }
@@ -69,7 +69,7 @@ namespace Megaphone.Feeds.Services.Feeds
 
         private void Updated()
         {
-            lastUpdated = clock.Now;
+            lastUpdated = new DateTime(clock.Now.Ticks);
         }
 
         private async Task SetAsync(StorageEntry<List<Feed>> content)
