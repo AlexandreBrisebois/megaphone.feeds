@@ -1,5 +1,5 @@
 ﻿using Megaphone.Feeds.Models;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Crawler;
 using Megaphone.Standard.Commands;
 using Megaphone.Standard.Messages;
 using System.Threading.Tasks;

@@ -1,5 +1,5 @@
 ﻿using Megaphone.Feeds.Models.Views;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Api;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;

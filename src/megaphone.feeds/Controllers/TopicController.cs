@@ -2,8 +2,8 @@
 using Megaphone.Feeds.Commands;
 using Megaphone.Feeds.Events;
 using Megaphone.Feeds.Models;
-using Megaphone.Feeds.Services;
 using Megaphone.Feeds.Services.Feeds;
+using Megaphone.Feeds.Services.Resources;
 using Megaphone.Standard.Events;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;

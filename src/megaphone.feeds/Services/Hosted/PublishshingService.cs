@@ -1,6 +1,8 @@
 ﻿using Megaphone.Feeds.Models.Views;
 using Megaphone.Feeds.Queries;
+using Megaphone.Feeds.Services.Api;
 using Megaphone.Feeds.Services.Feeds;
+using Megaphone.Feeds.Services.Resources;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;

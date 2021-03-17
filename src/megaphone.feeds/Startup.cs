@@ -1,6 +1,8 @@
 using Megaphone.Feeds.Mocks;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Api;
+using Megaphone.Feeds.Services.Crawler;
 using Megaphone.Feeds.Services.Feeds;
+using Megaphone.Feeds.Services.Resources;
 using Megaphone.Feeds.Services.Storage;
 using Megaphone.Standard.Time;
 using Microsoft.AspNetCore.Builder;

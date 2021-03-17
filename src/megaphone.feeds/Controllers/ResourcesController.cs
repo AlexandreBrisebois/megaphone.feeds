@@ -1,6 +1,6 @@
 ﻿using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Resources;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

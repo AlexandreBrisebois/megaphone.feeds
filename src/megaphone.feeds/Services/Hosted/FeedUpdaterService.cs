@@ -1,5 +1,6 @@
 ﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Models;
+using Megaphone.Feeds.Services.Crawler;
 using Megaphone.Feeds.Services.Feeds;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;

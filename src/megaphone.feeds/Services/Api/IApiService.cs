@@ -1,7 +1,7 @@
 ﻿using Megaphone.Feeds.Models.Views;
 using System.Threading.Tasks;
 
-namespace Megaphone.Feeds.Services
+namespace Megaphone.Feeds.Services.Api
 {
     public interface IApiService
     {

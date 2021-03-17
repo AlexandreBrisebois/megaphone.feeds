@@ -1,7 +1,7 @@
 ﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Resources;
 using Megaphone.Standard.Commands;
 using System;
 using System.Collections.Generic;

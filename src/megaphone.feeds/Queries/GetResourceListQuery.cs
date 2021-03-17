@@ -1,5 +1,5 @@
 ﻿using Megaphone.Feeds.Models;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Resources;
 using Megaphone.Feeds.Services.Storage;
 using Megaphone.Standard.Queries;
 using System;

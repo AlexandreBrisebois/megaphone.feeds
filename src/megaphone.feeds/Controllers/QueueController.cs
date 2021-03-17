@@ -1,6 +1,6 @@
 ﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Messages;
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Crawler;
 using Megaphone.Feeds.Services.Feeds;
 using Megaphone.Standard.Extensions;
 using Megaphone.Standard.Messages;

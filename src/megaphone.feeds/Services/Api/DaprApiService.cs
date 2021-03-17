@@ -3,7 +3,7 @@ using Megaphone.Feeds.Models.Views;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Megaphone.Feeds.Services
+namespace Megaphone.Feeds.Services.Api
 {
     public class DaprApiService : IApiService
     {

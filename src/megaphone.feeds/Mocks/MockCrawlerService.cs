@@ -1,4 +1,4 @@
-﻿using Megaphone.Feeds.Services;
+﻿using Megaphone.Feeds.Services.Crawler;
 using Megaphone.Standard.Messages;
 using System;
 using System.Collections.Concurrent;

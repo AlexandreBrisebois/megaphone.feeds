@@ -3,7 +3,7 @@ using Megaphone.Feeds.Services.Storage;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Megaphone.Feeds.Services
+namespace Megaphone.Feeds.Services.Resources
 {
     public class ResourceService : IResourceService
     {
