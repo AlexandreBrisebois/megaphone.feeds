@@ -36,8 +36,11 @@ namespace Megaphone.Feeds.Services.Storage
         public async Task SetAsync(string partitionKey, string contentKey, StorageEntry<List<Feed>> content)
         {
             string filePath = $"{path}/{partitionKey}/{contentKey}";
+          
+            var fileInfo = new FileInfo(filePath);
+            fileInfo.Directory.Create();
 
-            using var stream = File.OpenWrite(filePath);
+            using var stream = fileInfo.OpenWrite();
             using var writer = new StreamWriter(stream);
 
             await writer.WriteAsync(JsonSerializer.Serialize(content));

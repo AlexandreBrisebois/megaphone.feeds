@@ -13,7 +13,6 @@ Content-Type: application/json
     "event":"update"
 }
 
-
 ### Get Watch feed
 GET http://{{feed-service-daprhttp}}/v1.0/invoke/feeds/method/api/feeds
 

@@ -1,7 +1,6 @@
 ﻿using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Services.Storage;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Threading.Tasks;
 
 namespace Megaphone.Feeds.Services

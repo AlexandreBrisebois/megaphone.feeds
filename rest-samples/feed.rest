@@ -1,7 +1,7 @@
-@feed-service-daprhttp = localhost:3500 
+@feed-service = localhost:5000 
 
 ### post resource feed update event (reset)
-POST http://{{feed-service-daprhttp}}/v1.0/publish/resource-feed-updates
+POST http://{{feed-service}}/resource-feed-updates
 Content-Type: application/json
 
 {
@@ -15,14 +15,22 @@ Content-Type: application/json
 
 
 ### Get Watch feed
-GET http://{{feed-service-daprhttp}}/v1.0/invoke/feeds/method/api/feeds
+GET http://{{feed-service}}/api/feeds
 
+### Add Feed
+POST http://{{feed-service}}/feed-requests
+Content-Type: application/json
+
+{
+    "id": "80bc3136-dac4-4aad-94ea-4f6c0c6648e7",
+    "action": "add-feed",
+    "created": "2021-02-21T19:28:18.8220101+00:00",
+    "parameters": {
+        "display" : "Microsoft Azure Blog",
+        "url": "https://azure.microsoft.com/en-us/blog/feed/"
+    },
+    "metadata": {}
+}
 
 ### List Resources
-GET http://{{feed-service-daprhttp}}/v1.0/invoke/feeds/method/api/resources/2020/06/30
-### List Resources
-GET http://{{feed-service-daprhttp}}/v1.0/invoke/feeds/method/api/resources/2020/07/06
-### List Resources
-GET http://{{feed-service-daprhttp}}/v1.0/invoke/feeds/method/api/resources/2020/07/07
-### List Resources
-GET http://{{feed-service-daprhttp}}/v1.0/invoke/feeds/method/api/resources/2020/07/08
+GET http://{{feed-service}}/api/resources/2020/06/30

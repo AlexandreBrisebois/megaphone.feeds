@@ -21,9 +21,6 @@ namespace Feeds.API.Commands
         public async Task ApplyAsync(IFeedService model)
         {
             await model.SetAsync("feed", "list.json", entry);
-
-            if (Debugger.IsAttached)
-                Console.WriteLine($"-> | persisted feeds to : \"list.json\"");
         }
     }
 }

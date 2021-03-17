@@ -1,9 +1,0 @@
-@crawl-service = localhost:3500
-
-### request Crawl
-POST http://{{crawl-service}}/v1.0/publish/crawl
-Content-Type: application/json
-
-{
-    "url": "https://azure.microsoft.com/en-us/roadmap/feed/"
-}

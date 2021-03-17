@@ -25,9 +25,6 @@ namespace Feeds.API.Commands
         public async Task ApplyAsync(IResourceService model)
         {
             await model.SetAsync(partitionKey, CONTENT_KEY, entry);
-
-            if (Debugger.IsAttached)
-                Console.WriteLine($"-> | persisted updated resources : \"{CONTENT_KEY}\"");
         }
     }
 }

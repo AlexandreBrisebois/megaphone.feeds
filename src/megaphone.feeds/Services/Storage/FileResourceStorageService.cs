@@ -18,7 +18,7 @@ namespace Megaphone.Feeds.Services.Storage
 
         public async Task<StorageEntry<List<Resource>>> GetAsync(string partitionKey, string contentKey)
         {
-            string filePath = $"{path}/{partitionKey}/{contentKey}";
+            string filePath = $"{path}/resources/{partitionKey}/{contentKey}";
 
             if (File.Exists(filePath))
             {
@@ -35,9 +35,12 @@ namespace Megaphone.Feeds.Services.Storage
 
         public async Task SetAsync(string partitionKey, string contentKey, StorageEntry<List<Resource>> content)
         {
-            string filePath = $"{path}/{partitionKey}/{contentKey}";
+            string filePath = $"{path}/resources/{partitionKey}/{contentKey}";
 
-            using var stream = File.OpenWrite(filePath);
+            var fileInfo = new FileInfo(filePath);
+            fileInfo.Directory.Create();
+
+            using var stream = fileInfo.OpenWrite();
             using var writer = new StreamWriter(stream);
 
             await writer.WriteAsync(JsonSerializer.Serialize(content));
