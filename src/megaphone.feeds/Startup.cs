@@ -2,6 +2,7 @@ using Megaphone.Feeds.Mocks;
 using Megaphone.Feeds.Services;
 using Megaphone.Feeds.Services.Feeds;
 using Megaphone.Feeds.Services.Storage;
+using Megaphone.Standard.Time;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -65,6 +66,8 @@ namespace megaphone.feeds
                 services.AddSingleton<ICrawlerService, DaprCrawlerService>();
                 services.AddSingleton<IApiService, DaprApiService>();
             }
+
+            services.AddSingleton<IClock, UtcClock>();
 
             services.AddSingleton<IResourceService, ResourceService>();
             services.AddSingleton<IFeedService, FeedService>();
