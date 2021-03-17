@@ -40,7 +40,7 @@ namespace Megaphone.Feeds.Services.Storage
             var fileInfo = new FileInfo(filePath);
             fileInfo.Directory.Create();
 
-            using var stream = fileInfo.OpenWrite();
+            using var stream = fileInfo.Create();
             using var writer = new StreamWriter(stream);
 
             await writer.WriteAsync(JsonSerializer.Serialize(content));
