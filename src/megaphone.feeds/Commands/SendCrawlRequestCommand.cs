@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using Megaphone.Feeds.Models;
+using Megaphone.Feeds.Services;
 using Megaphone.Standard.Commands;
-using Dapr.Client;
 using Megaphone.Standard.Messages;
-using Megaphone.Feeds.Models;
+using System.Threading.Tasks;
 
 namespace Feeds.API.Commands
 {
-    internal class SendCrawlRequestCommand : ICommand<DaprClient>
+    internal class SendCrawlRequestCommand : ICommand<ICrawlerService>
     {
         private readonly CommandMessage message;
 
@@ -22,8 +22,8 @@ namespace Feeds.API.Commands
             message = MessageBuilder.NewCommand("crawl-request")
                                         .WithParameters("uri", resource.Url)
                                         .Make();
-        } 
-        
+        }
+
         public SendCrawlRequestCommand(Feed feed)
         {
             message = MessageBuilder.NewCommand("crawl-request")
@@ -32,9 +32,9 @@ namespace Feeds.API.Commands
                                         .Make();
         }
 
-        public async Task ApplyAsync(DaprClient model)
+        public async Task ApplyAsync(ICrawlerService model)
         {
-            await model.InvokeBindingAsync("crawl-requests", "create", message);
+            await model.SendCrawlRequest(message);
         }
     }
 }

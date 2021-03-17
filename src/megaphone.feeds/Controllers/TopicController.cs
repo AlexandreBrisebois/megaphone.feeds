@@ -1,5 +1,4 @@
 ﻿using Dapr;
-using Dapr.Client;
 using Megaphone.Feeds.Commands;
 using Megaphone.Feeds.Events;
 using Megaphone.Feeds.Models;
@@ -17,20 +16,21 @@ namespace Megaphone.Feeds.Controllers
     [Route("/")]
     public class TopicController : ControllerBase
     {
-        private readonly ResourceStorageService resourceStorageService;
-        private readonly ResourceListChangeTracker resourceTracker;
         private readonly TelemetryClient telemetryClient;
-        private readonly FeedStorageService feedStorageService;
+        private readonly ResourceListChangeTracker resourceTracker;
+        
+        private readonly IFeedService feedService;
+        private readonly IResourceService resourceService;
 
-        public TopicController([FromServices] DaprClient daprClient,
+        public TopicController([FromServices] TelemetryClient telemetryClient,
                                [FromServices] ResourceListChangeTracker resourceTracker,
-                               TelemetryClient telemetryClient)
+                               [FromServices] IResourceService resourceService,
+                               [FromServices] IFeedService feedService)
         {
-            resourceStorageService = new ResourceStorageService(daprClient);
-            feedStorageService = new FeedStorageService(daprClient);
-
-            this.resourceTracker = resourceTracker;
             this.telemetryClient = telemetryClient;
+            this.resourceTracker = resourceTracker;
+            this.resourceService = resourceService;
+            this.feedService = feedService;
         }
 
         [HttpPost("resource-events")]
@@ -51,7 +51,7 @@ namespace Megaphone.Feeds.Controllers
         private async Task UpsertResource(Resource r)
         {
             var c = new UpsertResourceListCommand(r);
-            await c.ApplyAsync(resourceStorageService);
+            await c.ApplyAsync(resourceService);
 
             telemetryClient.TrackEvent(Events.Events.Resource.Update, new Dictionary<string, string> { { "display", r.Display }, { "url", r.Url } });
 
@@ -61,10 +61,9 @@ namespace Megaphone.Feeds.Controllers
         private async Task UpdateFeed(Feed f)
         {
             var c = new UpdateFeedListCommand(f);
-            await c.ApplyAsync(feedStorageService);
+            await c.ApplyAsync(feedService);
 
             telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList, new Dictionary<string, string> { { "display", f.Display }, { "url", f.Url } });
-
         }
     }
 }

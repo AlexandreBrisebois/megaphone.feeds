@@ -1,5 +1,4 @@
-﻿using Dapr.Client;
-using Megaphone.Feeds.Models.Views;
+﻿using Megaphone.Feeds.Models.Views;
 using Megaphone.Feeds.Queries;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
@@ -8,36 +7,34 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Megaphone.Feeds.Services
+namespace Megaphone.Feeds.Services.Hosted
 {
     public class PublishshingService : IHostedService, IDisposable
     {
         DateTimeOffset lastUpdated = DateTimeOffset.MinValue;
-
-        private readonly FeedStorageService feedStorageService;
-        private readonly ResourceStorageService resourceStorageService;
-
-        private readonly ResourceListChangeTracker resourceTracker;
+        
         private readonly TelemetryClient telemetryClient;
-
-        private readonly DaprClient daprClient;
+        private readonly ResourceListChangeTracker resourceTracker;
+        private readonly IFeedService feedService;
+        private readonly IResourceService resourceService;
+        private readonly IApiService apiService;
 
         private Timer timer;
 
-        public PublishshingService([FromServices] DaprClient daprClient,
+        public PublishshingService([FromServices] TelemetryClient telemetryClient,
                                    [FromServices] ResourceListChangeTracker resourceTracker,
-                                   TelemetryClient telemetryClient)
+                                   [FromServices] IApiService apiService,
+                                   [FromServices] IFeedService feedService,
+                                   [FromServices] IResourceService resourceService)
         {
-            feedStorageService = new FeedStorageService(daprClient);
-            resourceStorageService = new ResourceStorageService(daprClient);
-
-            this.daprClient = daprClient;
-            this.resourceTracker = resourceTracker;
             this.telemetryClient = telemetryClient;
+            this.resourceTracker = resourceTracker;
+            this.apiService = apiService;
+            this.feedService = feedService;
+            this.resourceService = resourceService;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
@@ -53,7 +50,7 @@ namespace Megaphone.Feeds.Services
             },
                       null,
                       TimeSpan.Zero,
-                      TimeSpan.FromSeconds(5));
+                      TimeSpan.FromSeconds(30));
 
             telemetryClient.TrackEvent("started-publishing-service");
 
@@ -69,7 +66,7 @@ namespace Megaphone.Feeds.Services
                 foreach (var d in dates)
                 {
                     var q = new GetResourceListQuery(d);
-                    var entry = await q.ExecuteAsync(resourceStorageService);
+                    var entry = await q.ExecuteAsync(resourceService);
 
                     var view = new ResourceListView
                     {
@@ -82,7 +79,7 @@ namespace Megaphone.Feeds.Services
                         }).ToList()
                     };
 
-                    await daprClient.InvokeMethodAsync(HttpMethod.Post, "api", "api/resources", view);
+                    await apiService.PublishAsync(view);
 
                     telemetryClient.TrackEvent("publish-resources-to-api-service", new Dictionary<string, string> { { "date", d.ToShortDateString() } });
 
@@ -98,7 +95,7 @@ namespace Megaphone.Feeds.Services
 
         private List<DateTime> GetDates()
         {
-            List<DateTime> dates = new List<DateTime>();
+            List<DateTime> dates = new();
             while (resourceTracker.TryRemoveDate(out DateTime date))
             {
                 dates.Add(date.Date);
@@ -113,7 +110,7 @@ namespace Megaphone.Feeds.Services
             try
             {
                 var q = new GetFeedListQuery();
-                var entry = await q.ExecuteAsync(feedStorageService);
+                var entry = await q.ExecuteAsync(feedService);
 
                 if (lastUpdated != entry?.Updated)
                 {
@@ -124,7 +121,7 @@ namespace Megaphone.Feeds.Services
                             Feeds = entry.Value.Select(f => new FeedView { Display = f.Display, Url = f.Url, Id = f.Id }).ToList()
                         };
 
-                        await daprClient.InvokeMethodAsync(HttpMethod.Put, "api", "api/feeds", view);
+                        await apiService.PublishAsync(view);
 
                         telemetryClient.TrackEvent("publish-feeds-to-api-service");
 

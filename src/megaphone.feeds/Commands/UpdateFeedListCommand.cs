@@ -1,17 +1,15 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
-using Megaphone.Feeds.Services;
+﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Models;
-using Feeds.API.Commands;
-using Megaphone.Standard.Commands;
-using Megaphone.Standard.Services;
 using Megaphone.Feeds.Queries;
+using Megaphone.Feeds.Services;
+using Megaphone.Standard.Commands;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Megaphone.Feeds.Commands
 {
-    internal class UpdateFeedListCommand : ICommand<IPartionedStorageService<StorageEntry<List<Feed>>>>
+    internal class UpdateFeedListCommand : ICommand<IFeedService>
     {
         readonly Feed feed;
 
@@ -20,7 +18,7 @@ namespace Megaphone.Feeds.Commands
             this.feed = feed;
         }
 
-        public async Task ApplyAsync(IPartionedStorageService<StorageEntry<List<Feed>>> model)
+        public async Task ApplyAsync(IFeedService model)
         {
             var q = new GetFeedListQuery();
             var entry = await q.ExecuteAsync(model);
@@ -46,7 +44,7 @@ namespace Megaphone.Feeds.Commands
             var c = new PersistFeedListCommand(entry);
             await c.ApplyAsync(model);
 
-             }
+        }
 
         static bool IsNotDefault(Feed f)
         {

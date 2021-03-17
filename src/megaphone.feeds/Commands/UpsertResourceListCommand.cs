@@ -1,17 +1,16 @@
-﻿using System.Threading.Tasks;
-using System.Collections.Generic;
-using Megaphone.Feeds.Services;
+﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Models;
-using Feeds.API.Commands;
-using Megaphone.Standard.Commands;
-using Megaphone.Standard.Services;
 using Megaphone.Feeds.Queries;
-using System.Diagnostics;
+using Megaphone.Feeds.Services;
+using Megaphone.Standard.Commands;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Megaphone.Feeds.Commands
 {
-    internal class UpsertResourceListCommand : ICommand<IPartionedStorageService<StorageEntry<List<Resource>>>>
+    internal class UpsertResourceListCommand : ICommand<IResourceService>
     {
         readonly Resource resource;
 
@@ -20,7 +19,7 @@ namespace Megaphone.Feeds.Commands
             this.resource = resource;
         }
 
-        public async Task ApplyAsync(IPartionedStorageService<StorageEntry<List<Resource>>> model)
+        public async Task ApplyAsync(IResourceService model)
         {
             var q = new GetResourceListQuery(resource.Published);
             var entry = await q.ExecuteAsync(model);
@@ -31,7 +30,7 @@ namespace Megaphone.Feeds.Commands
 
                 if (Debugger.IsAttached)
                     Console.WriteLine($"[] | resource update : \"{resource.Display}\" ({resource.Published.ToString("s")})");
-               
+
             }
             else
             {
@@ -52,11 +51,11 @@ namespace Megaphone.Feeds.Commands
 
                     if (Debugger.IsAttached)
                         Console.WriteLine($"[] | resource update : \"{resource.Display}\" ({resource.Published.ToString("s")})");
-                }                
+                }
             }
 
             var c = new PersistResourceListCommand(resource.Published, entry);
-            await c.ApplyAsync(model);           
+            await c.ApplyAsync(model);
         }
 
         static bool IsNotDefault(Resource r)

@@ -1,15 +1,15 @@
-﻿using System.Threading.Tasks;
-using Megaphone.Standard.Commands;
-using Megaphone.Standard.Services;
-using System.Collections.Generic;
-using System;
-using System.Diagnostics;
+﻿using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Services;
-using Megaphone.Feeds.Models;
+using Megaphone.Feeds.Services.Storage;
+using Megaphone.Standard.Commands;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Feeds.API.Commands
 {
-    internal class PersistResourceListCommand : ICommand<IPartionedStorageService<StorageEntry<List<Resource>>>>
+    internal class PersistResourceListCommand : ICommand<IResourceService>
     {
         const string CONTENT_KEY = "resources.json";
 
@@ -22,11 +22,11 @@ namespace Feeds.API.Commands
             this.entry = entry;
         }
 
-        public async Task ApplyAsync(IPartionedStorageService<StorageEntry<List<Resource>>> model)
+        public async Task ApplyAsync(IResourceService model)
         {
             await model.SetAsync(partitionKey, CONTENT_KEY, entry);
 
-             if (Debugger.IsAttached)
+            if (Debugger.IsAttached)
                 Console.WriteLine($"-> | persisted updated resources : \"{CONTENT_KEY}\"");
         }
     }

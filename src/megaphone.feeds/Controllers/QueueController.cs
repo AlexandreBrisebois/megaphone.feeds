@@ -1,9 +1,7 @@
-﻿using Dapr.Client;
-using Feeds.API.Commands;
+﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Messages;
 using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
-using Megaphone.Standard.Events;
 using Megaphone.Standard.Extensions;
 using Megaphone.Standard.Messages;
 using Microsoft.ApplicationInsights;
@@ -20,17 +18,18 @@ namespace Megaphone.Feeds.Controllers
     [Route("/")]
     public class QueueController : ControllerBase
     {
-        private readonly DaprClient daprClient;
         private readonly TelemetryClient telemetryClient;
-        private readonly FeedStorageService feedStorageService;
+        private readonly ICrawlerService crawlerService;
+        private readonly IFeedService feedService;
 
-        public QueueController([FromServices] DaprClient daprClient,
-                               TelemetryClient telemetryClient) : base()
+        public QueueController([FromServices] TelemetryClient telemetryClient,
+                               [FromServices] IFeedService feedService,
+                               [FromServices] ICrawlerService crawlerService) : base()
         {
-            this.daprClient = daprClient;
+            this.crawlerService = crawlerService;
             this.telemetryClient = telemetryClient;
 
-            feedStorageService = new FeedStorageService(daprClient);
+            this.feedService = feedService;
         }
 
         [HttpPost("feed-requests")]
@@ -40,11 +39,12 @@ namespace Megaphone.Feeds.Controllers
             if (message.Action == Actions.Feed.Add)
             {
                 await AddFeed(message);
-                telemetryClient.TrackEvent(Actions.Feed.Delete, new Dictionary<string, string> 
-                                                                    {
-                                                                        { "url", message.Parameters.GetValueOrDefault("url") },
-                                                                        { "display", message.Parameters.GetValueOrDefault("display") }
-                                                                    });
+
+                telemetryClient.TrackEvent(Actions.Feed.Delete, new Dictionary<string, string>
+                                                                {
+                                                                    { "url", message.Parameters.GetValueOrDefault("url") },
+                                                                    { "display", message.Parameters.GetValueOrDefault("display") }
+                                                                });
 
             }
             else if (message.Action == Actions.Feed.Delete)
@@ -59,7 +59,7 @@ namespace Megaphone.Feeds.Controllers
         private async Task DeleteFeed(CommandMessage message)
         {
             var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedStorageService);
+            var entry = await q.ExecuteAsync(feedService);
 
             if (!entry.HasValue)
             {
@@ -69,13 +69,13 @@ namespace Megaphone.Feeds.Controllers
             entry.Value = entry.Value.Where(i => i.Id != message.Parameters.GetValueOrDefault("id")).ToList();
 
             var c = new PersistFeedListCommand(entry);
-            await c.ApplyAsync(feedStorageService);
+            await c.ApplyAsync(feedService);
         }
 
         private async Task AddFeed(CommandMessage message)
         {
             var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedStorageService);
+            var entry = await q.ExecuteAsync(feedService);
 
             if (!entry.HasValue)
             {
@@ -88,7 +88,7 @@ namespace Megaphone.Feeds.Controllers
 
             var feed = entry.Value.Find(f => f.Id == id);
 
-            if(feed!= null)
+            if (feed != null)
             {
                 feed.Display = display;
             }
@@ -102,15 +102,15 @@ namespace Megaphone.Feeds.Controllers
                 };
 
                 entry.Value.Add(feed);
-            }         
+            }
 
             var c = new PersistFeedListCommand(entry);
-            await c.ApplyAsync(feedStorageService);
+            await c.ApplyAsync(feedService);
 
             telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList);
 
             var publish = new SendCrawlRequestCommand(feed);
-            await publish.ApplyAsync(daprClient);
+            await publish.ApplyAsync(crawlerService);
 
             telemetryClient.TrackEvent(Events.Events.Feed.SentCrawlRequest, new Dictionary<string, string> { { "url", feed.Url } });
         }

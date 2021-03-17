@@ -1,8 +1,6 @@
-﻿using Dapr.Client;
-using Megaphone.Feeds.Models;
+﻿using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
 using Megaphone.Feeds.Services;
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +13,11 @@ namespace megaphone.feeds.Controllers
     [Route("/api/feeds")]
     public class FeedsController : ControllerBase
     {
-        private readonly TelemetryClient telemetryClient;
-        private FeedStorageService feedStorageService;
+        private IFeedService feedService;
 
-        public FeedsController([FromServices] DaprClient daprClient,
-                               TelemetryClient telemetryClient)
+        public FeedsController([FromServices] IFeedService feedService)
         {
-            feedStorageService = new FeedStorageService(daprClient);
-            this.telemetryClient = telemetryClient;
+            this.feedService = feedService;
         }
 
         [HttpGet]
@@ -31,7 +26,7 @@ namespace megaphone.feeds.Controllers
         public async Task<List<Feed>> GetAsync()
         {
             var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedStorageService);
+            var entry = await q.ExecuteAsync(feedService);
 
             return entry.Value;
         }
@@ -42,7 +37,7 @@ namespace megaphone.feeds.Controllers
         public async Task<Feed> GetAsync(string id)
         {
             var q = new GetFeedListQuery();
-            var entry = await q.ExecuteAsync(feedStorageService);
+            var entry = await q.ExecuteAsync(feedService);
 
             var feed = entry.Value.FirstOrDefault(i => i.Id == id);
 

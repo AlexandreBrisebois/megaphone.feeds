@@ -1,4 +1,6 @@
+using Megaphone.Feeds.Mocks;
 using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Storage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Diagnostics;
 
 namespace megaphone.feeds
 {
@@ -21,8 +24,10 @@ namespace megaphone.feeds
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton(new ResourceListChangeTracker());
+            RegisterServices(services);
+
             services.AddControllers().AddDapr();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Megaphone Feeds", Version = "v1" });
@@ -31,6 +36,39 @@ namespace megaphone.feeds
             string key = Environment.GetEnvironmentVariable("INSTRUMENTATION_KEY");
             if (!string.IsNullOrEmpty(key))
                 services.AddApplicationInsightsTelemetry(key);
+            else
+                services.AddApplicationInsightsTelemetry();
+        }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USE-VOLUME-STORAGE")))
+            {
+                services.AddSingleton<IFeedStorageService, DaprFeedStorageService>();
+                services.AddSingleton<IResourceStorageService, DaprResourceStorageService>();
+            }
+            else
+            {
+                services.AddSingleton<IFeedStorageService, FileStorageFeedStorageService>();
+                services.AddSingleton<IResourceStorageService, FileResourceStorageService>();
+            }
+
+            if (Debugger.IsAttached)
+            {
+                services.AddSingleton<ICrawlerService, MockCrawlerService>();
+                services.AddSingleton<IApiService, MockApiService>();
+
+            }
+            else
+            {
+                services.AddSingleton<ICrawlerService, DaprCrawlerService>();
+                services.AddSingleton<IApiService, DaprApiService>();
+            }
+
+            services.AddSingleton<IResourceService, ResourceService>();
+            services.AddSingleton<IFeedService, FeedService>();
+
+            services.AddSingleton(new ResourceListChangeTracker());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

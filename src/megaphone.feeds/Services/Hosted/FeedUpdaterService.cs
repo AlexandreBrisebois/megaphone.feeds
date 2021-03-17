@@ -1,5 +1,4 @@
-﻿using Dapr.Client;
-using Feeds.API.Commands;
+﻿using Feeds.API.Commands;
 using Megaphone.Feeds.Models;
 using Megaphone.Feeds.Queries;
 using Microsoft.ApplicationInsights;
@@ -11,24 +10,24 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Megaphone.Feeds.Services
+namespace Megaphone.Feeds.Services.Hosted
 {
     public class FeedUpdaterService : IHostedService, IDisposable
     {
-        private readonly FeedStorageService feedStorageService;
+        private readonly IFeedService feedService;
+        private readonly ICrawlerService crawlerService;
 
-        private readonly DaprClient daprClient;
         private readonly TelemetryClient telemetryClient;
 
         private Timer timer;
 
-        public FeedUpdaterService([FromServices] DaprClient daprClient, 
-                                  TelemetryClient telemetryClient)
+        public FeedUpdaterService([FromServices] TelemetryClient telemetryClient,
+                                  [FromServices] ICrawlerService crawlerService,
+                                  [FromServices] IFeedService feedService)
         {
-            feedStorageService = new FeedStorageService(daprClient);
-
-            this.daprClient = daprClient;
             this.telemetryClient = telemetryClient;
+            this.crawlerService = crawlerService;
+            this.feedService = feedService;
         }
 
         public Task StartAsync(CancellationToken stoppingToken)
@@ -56,12 +55,12 @@ namespace Megaphone.Feeds.Services
             try
             {
                 var q = new GetFeedListQuery();
-                var entry = await q.ExecuteAsync(feedStorageService);
+                var entry = await q.ExecuteAsync(feedService);
 
                 foreach (var f in entry.Value ?? new List<Feed>())
                 {
                     var c = new SendCrawlRequestCommand(f);
-                    await c.ApplyAsync(daprClient);
+                    await c.ApplyAsync(crawlerService);
 
                     if (Debugger.IsAttached)
                         Console.WriteLine($"-> | sent crawl request : \"{f.Display}\" : {f.Url}");

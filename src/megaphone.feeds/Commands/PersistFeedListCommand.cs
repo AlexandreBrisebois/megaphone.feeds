@@ -1,15 +1,15 @@
+using Megaphone.Feeds.Models;
+using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Storage;
+using Megaphone.Standard.Commands;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Megaphone.Feeds.Models;
-using Megaphone.Feeds.Services;
-using Megaphone.Standard.Commands;
-using Megaphone.Standard.Services;
 
 namespace Feeds.API.Commands
 {
-    class PersistFeedListCommand : ICommand<IPartionedStorageService<StorageEntry<List<Feed>>>>
+    class PersistFeedListCommand : ICommand<IFeedService>
     {
         readonly StorageEntry<List<Feed>> entry;
 
@@ -18,7 +18,7 @@ namespace Feeds.API.Commands
             this.entry = entry;
         }
 
-        public async Task ApplyAsync(IPartionedStorageService<StorageEntry<List<Feed>>> model)
+        public async Task ApplyAsync(IFeedService model)
         {
             await model.SetAsync("feed", "list.json", entry);
 

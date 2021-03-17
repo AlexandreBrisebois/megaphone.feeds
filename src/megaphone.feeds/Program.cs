@@ -1,4 +1,4 @@
-using Megaphone.Feeds.Services;
+using Megaphone.Feeds.Services.Hosted;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

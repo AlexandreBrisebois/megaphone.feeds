@@ -1,9 +1,9 @@
-using System.Threading.Tasks;
-using Megaphone.Standard.Commands;
 using Dapr.Client;
+using Megaphone.Standard.Commands;
 using System;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Feeds.API.Commands
 {
