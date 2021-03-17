@@ -9,7 +9,12 @@ namespace Megaphone.Feeds.Services.Storage
 {
     public abstract class FileResourceStorageService : IResourceStorageService
     {
-        private string path = Environment.GetEnvironmentVariable("DATA_PATH");
+        private string path;
+
+        public FileResourceStorageService()
+        {
+            path = Environment.GetEnvironmentVariable("DATA_PATH");
+        }
 
         public async Task<StorageEntry<List<Resource>>> GetAsync(string partitionKey, string contentKey)
         {
