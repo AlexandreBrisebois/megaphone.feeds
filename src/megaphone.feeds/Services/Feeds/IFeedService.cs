@@ -1,4 +1,5 @@
 ﻿using Megaphone.Feeds.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,5 +10,6 @@ namespace Megaphone.Feeds.Services.Feeds
         Task<List<Feed>> GetAsync();
         void Update(Feed f);
         void Delete(string id);
+        DateTimeOffset LastUpdated { get; }
     }
 }

@@ -57,7 +57,7 @@ namespace Megaphone.Feeds.Controllers
 
         private async Task DeleteFeed(CommandMessage message)
         {
-            await feedService.Delete(message.Parameters.GetValueOrDefault("id"));
+            feedService.Delete(message.Parameters.GetValueOrDefault("id"));
         }
 
         private async Task AddFeed(CommandMessage message)
@@ -73,7 +73,7 @@ namespace Megaphone.Feeds.Controllers
                 Id = id
             };
 
-            await feedService.Update(feed);
+            feedService.Update(feed);
 
             telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList);
 

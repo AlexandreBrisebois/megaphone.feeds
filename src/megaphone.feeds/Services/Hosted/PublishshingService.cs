@@ -16,7 +16,7 @@ namespace Megaphone.Feeds.Services.Hosted
     public class PublishshingService : IHostedService, IDisposable
     {
         DateTimeOffset lastUpdated = DateTimeOffset.MinValue;
-        
+
         private readonly TelemetryClient telemetryClient;
         private readonly ResourceListChangeTracker resourceTracker;
         private readonly IFeedService feedService;
@@ -112,24 +112,19 @@ namespace Megaphone.Feeds.Services.Hosted
             {
                 var entry = await feedService.GetAsync();
 
-                if (lastUpdated != entry?.Updated)
+                if (lastUpdated != feedService.LastUpdated)
                 {
-                    if (entry.HasValue)
+
+                    var view = new FeedListView
                     {
-                        var view = new FeedListView
-                        {
-                            Feeds = entry.Value.Select(f => new FeedView { Display = f.Display, Url = f.Url, Id = f.Id }).ToList()
-                        };
+                        Feeds = entry.Select(f => new FeedView { Display = f.Display, Url = f.Url, Id = f.Id }).ToList()
+                    };
 
-                        await apiService.PublishAsync(view);
+                    await apiService.PublishAsync(view);
 
-                        telemetryClient.TrackEvent("publish-feeds-to-api-service");
+                    telemetryClient.TrackEvent("publish-feeds-to-api-service");
 
-                        if (Debugger.IsAttached)
-                            Console.WriteLine($"-> | published Feeds to API service");
-
-                        lastUpdated = entry.Updated;
-                    }
+                    lastUpdated = feedService.LastUpdated;
                 }
             }
             catch (Exception ex)

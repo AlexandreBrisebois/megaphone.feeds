@@ -26,7 +26,7 @@ namespace megaphone.feeds.Controllers
         {
             var entry = await feedService.GetAsync();
 
-            return entry.Value;
+            return entry;
         }
 
         [HttpGet]
@@ -36,7 +36,7 @@ namespace megaphone.feeds.Controllers
         {
             var entry = await feedService.GetAsync();
 
-            var feed = entry.Value.FirstOrDefault(i => i.Id == id);
+            var feed = entry.FirstOrDefault(i => i.Id == id);
 
             return feed;
         }

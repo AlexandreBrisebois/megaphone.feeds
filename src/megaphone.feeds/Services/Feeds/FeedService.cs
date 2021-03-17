@@ -14,8 +14,8 @@ namespace Megaphone.Feeds.Services.Feeds
     {
         bool initializationRequired = true;
 
-        private DateTimeOffset lastPersisted;
-        private DateTimeOffset lastUpdated;
+        private DateTimeOffset lastPersisted = DateTimeOffset.MinValue;
+        private DateTimeOffset lastUpdated = DateTimeOffset.MinValue;
 
         public DateTimeOffset LastUpdated => lastUpdated;
 
@@ -40,8 +40,10 @@ namespace Megaphone.Feeds.Services.Feeds
                 if (lastPersisted < lastUpdated)
                 {
                     await SetAsync(new StorageEntry<List<Feed>>() { Value = feeds.Values.ToList() });
+
+                    lastPersisted = clock.Now;
                 }                   
-             }, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
+             }, null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
         }
 
         ConcurrentDictionary<string, Feed> feeds = new();

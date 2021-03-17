@@ -56,7 +56,7 @@ namespace Megaphone.Feeds.Services.Hosted
             {
                 var entry = await feedService.GetAsync();
 
-                foreach (var f in entry.Value ?? new List<Feed>())
+                foreach (var f in entry ?? new List<Feed>())
                 {
                     var c = new SendCrawlRequestCommand(f);
                     await c.ApplyAsync(crawlerService);

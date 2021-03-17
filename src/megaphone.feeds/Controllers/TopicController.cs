@@ -61,7 +61,7 @@ namespace Megaphone.Feeds.Controllers
 
         private async Task UpdateFeed(Feed f)
         {
-            await feedService.Update(f);
+            feedService.Update(f);
 
             telemetryClient.TrackEvent(Events.Events.Feed.UpdateFeedList, new Dictionary<string, string> { { "display", f.Display }, { "url", f.Url } });
         }
