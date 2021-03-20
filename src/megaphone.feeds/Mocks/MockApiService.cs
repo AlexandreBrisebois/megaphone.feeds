@@ -10,12 +10,12 @@ namespace Megaphone.Feeds.Mocks
     {
         public static readonly MockCrawlerService Instance = new();
 
-        public ConcurrentBag<FeedListView> FeedLists { get; init; } = new ConcurrentBag<FeedListView>();
-        public ConcurrentBag<ResourceListView> ResourceLists { get; init; } = new ConcurrentBag<ResourceListView>();
+        public ConcurrentQueue<FeedListView> FeedLists { get; init; } = new ConcurrentQueue<FeedListView>();
+        public ConcurrentQueue<ResourceListView> ResourceLists { get; init; } = new ConcurrentQueue<ResourceListView>();
 
         public Task PublishAsync(ResourceListView view)
         {
-            ResourceLists.Add(view);
+            ResourceLists.Enqueue(view);
 
             Console.WriteLine("published resource list =>" + view.Date.ToShortDateString());
 
@@ -24,7 +24,7 @@ namespace Megaphone.Feeds.Mocks
 
         public Task PublishAsync(FeedListView view)
         {
-            FeedLists.Add(view);
+            FeedLists.Enqueue(view);
 
             Console.WriteLine("published feed list =>" + view.Updated.DateTime.ToShortDateString());
 

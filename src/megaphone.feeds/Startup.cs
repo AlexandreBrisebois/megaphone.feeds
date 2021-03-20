@@ -46,25 +46,26 @@ namespace megaphone.feeds
 
         private static void RegisterServices(IServiceCollection services)
         {
-            if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USE-VOLUME-STORAGE")))
-            {
-                services.AddSingleton<IFeedStorageService, DaprFeedStorageService>();
-                services.AddSingleton<IResourceStorageService, DaprResourceStorageService>();
-            }
-            else
-            {
-                services.AddSingleton<IFeedStorageService>(new FileStorageFeedStorageService());
-                services.AddSingleton<IResourceStorageService>(new FileResourceStorageService());
-            }
-
             if (Debugger.IsAttached)
             {
                 services.AddSingleton<ICrawlerService, MockCrawlerService>();
                 services.AddSingleton<IApiService, MockApiService>();
 
+                services.AddSingleton<IFeedStorageService, InMemoryFeedStorageService>();
+                services.AddSingleton<IResourceStorageService, InMemoryResourceStorageService>();
             }
             else
             {
+                if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USE-VOLUME-STORAGE")))
+                {
+                    services.AddSingleton<IFeedStorageService, DaprFeedStorageService>();
+                    services.AddSingleton<IResourceStorageService, DaprResourceStorageService>();
+                }
+                else
+                {
+                    services.AddSingleton<IFeedStorageService>(new FileSystemFeedStorageService());
+                    services.AddSingleton<IResourceStorageService>(new FileSystemResourceStorageService());
+                }
                 services.AddSingleton<ICrawlerService, DaprCrawlerService>();
                 services.AddSingleton<IApiService, DaprApiService>();
             }

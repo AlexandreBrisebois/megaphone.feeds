@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Megaphone.Feeds.Services.Storage
 {
-    public class FileResourceStorageService : IResourceStorageService
+    public class FileSystemResourceStorageService : IResourceStorageService
     {
         private string path;
 
-        public FileResourceStorageService()
+        public FileSystemResourceStorageService()
         {
             path = Environment.GetEnvironmentVariable("DATA_PATH");
         }

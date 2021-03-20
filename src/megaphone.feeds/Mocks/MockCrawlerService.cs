@@ -11,11 +11,11 @@ namespace Megaphone.Feeds.Mocks
     {
         public static readonly MockCrawlerService Instance = new();
 
-        public ConcurrentBag<CommandMessage> Messages { get; init; } = new ConcurrentBag<CommandMessage>();
+        public ConcurrentQueue<CommandMessage> Messages { get; init; } = new ConcurrentQueue<CommandMessage>();
 
         public Task SendCrawlRequest(CommandMessage message)
         {
-            Messages.Add(message);
+            Messages.Enqueue(message);
 
             Console.WriteLine("sent crawl request => "+JsonSerializer.Serialize(message));
 
