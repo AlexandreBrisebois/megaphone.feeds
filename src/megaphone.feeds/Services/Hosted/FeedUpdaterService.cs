@@ -27,13 +27,13 @@ namespace Megaphone.Feeds.Services.Hosted
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Task.Run(async () =>
+            return Task.Factory.StartNew(async () =>
             {
                 while (stoppingToken.IsCancellationRequested)
                 {
                     await TrySendFeedCrawlRequests();
 
-                    await Task.Delay(TimeSpan.FromMinutes(15));
+                    await Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(Environment.GetEnvironmentVariable("SCHEDULE-CRAWL-INTERVAL"))));
                 }
             });
         }
