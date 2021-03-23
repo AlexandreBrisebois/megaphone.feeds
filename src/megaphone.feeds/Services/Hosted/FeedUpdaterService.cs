@@ -29,7 +29,7 @@ namespace Megaphone.Feeds.Services.Hosted
         {
             return Task.Factory.StartNew(async () =>
             {
-                while (stoppingToken.IsCancellationRequested)
+                while (!stoppingToken.IsCancellationRequested)
                 {
                     await TrySendFeedCrawlRequests();
 
