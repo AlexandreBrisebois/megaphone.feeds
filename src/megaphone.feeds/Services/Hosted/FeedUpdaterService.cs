@@ -15,6 +15,7 @@ namespace Megaphone.Feeds.Services.Hosted
         private readonly TelemetryClient telemetryClient;
         private readonly IFeedService feedService;
         private readonly ICrawlerService crawlerService;
+        private Task taskLoop;
 
         public FeedUpdaterService([FromServices] TelemetryClient telemetryClient,
                                   [FromServices] ICrawlerService crawlerService,
@@ -27,15 +28,20 @@ namespace Megaphone.Feeds.Services.Hosted
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            return Task.Factory.StartNew(async () =>
+            telemetryClient.TrackEvent("FeedUpdater: Execute Called");
+
+            taskLoop = Task.Run(async () =>
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
+                    telemetryClient.TrackEvent("FeedUpdater: Try Send Feed Crawl Requests");
                     await TrySendFeedCrawlRequests();
 
                     await Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(Environment.GetEnvironmentVariable("SCHEDULE-CRAWL-INTERVAL"))));
                 }
             });
+
+            return taskLoop;
         }
 
         private async Task TrySendFeedCrawlRequests()
@@ -46,8 +52,15 @@ namespace Megaphone.Feeds.Services.Hosted
 
                 foreach (var f in entry)
                 {
-                    var c = new SendCrawlRequestCommand(f);
-                    await c.ApplyAsync(crawlerService);
+                    try
+                    {
+                        var c = new SendCrawlRequestCommand(f);
+                        await c.ApplyAsync(crawlerService);
+                    }
+                    catch (Exception ex)
+                    {
+                        telemetryClient.TrackException(ex);
+                    }
                 }
             }
             catch (Exception ex)
