@@ -85,9 +85,6 @@ namespace Megaphone.Feeds.Services.Hosted
                     await apiService.PublishAsync(view);
 
                     telemetryClient.TrackEvent("publish-resources-to-api-service", new Dictionary<string, string> { { "date", d.ToShortDateString() } });
-
-                    if (Debugger.IsAttached)
-                        Console.WriteLine($"-> | published ({d.ToShortDateString()}) resource to API service");
                 }
             }
             catch (Exception ex)

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace Megaphone.Feeds.Services.Resources
 {
-
     public interface IResourceService
     {
         Task<StorageEntry<List<Resource>>> GetAsync(string partitionKey, string contentKey);

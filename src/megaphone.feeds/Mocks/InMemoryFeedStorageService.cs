@@ -11,7 +11,15 @@ namespace Megaphone.Feeds.Mocks
         InMemoryStorageService<StorageEntry<List<Feed>>> backingStore = new();
         public async Task<StorageEntry<List<Feed>>> GetAsync(string partitionKey, string contentKey)
         {
-            return await backingStore.GetAsync($"{partitionKey}/{contentKey}");
+            try
+            {
+                return await backingStore.GetAsync($"{partitionKey}/{contentKey}");
+            }
+            catch
+            {
+                return new StorageEntry<List<Feed>>();
+            }
+            
         }
 
         public async Task SetAsync(string partitionKey, string contentKey, StorageEntry<List<Feed>> content)
