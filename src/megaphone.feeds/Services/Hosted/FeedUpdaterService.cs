@@ -30,6 +30,9 @@ namespace Megaphone.Feeds.Services.Hosted
         {
             telemetryClient.TrackEvent("FeedUpdater: Execute Called");
 
+            if (taskLoop != null)
+                return taskLoop;
+
             taskLoop = Task.Run(async () =>
             {
                 while (!stoppingToken.IsCancellationRequested)
@@ -37,7 +40,7 @@ namespace Megaphone.Feeds.Services.Hosted
                     telemetryClient.TrackEvent("FeedUpdater: Try Send Feed Crawl Requests");
                     await TrySendFeedCrawlRequests();
 
-                    await Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(Environment.GetEnvironmentVariable("SCHEDULE-CRAWL-INTERVAL"))));
+                    Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(Environment.GetEnvironmentVariable("SCHEDULE-CRAWL-INTERVAL")))).Wait();
                 }
             });
 

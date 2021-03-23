@@ -7,6 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "USE-VOLUME-STORAGE": "true",
+        "SCHEDULE-CRAWL-INTERVAL": "1",
         "DATA_PATH": "W:\\\\data\\\\megaphone\\\\feeds"
       },
       "dotnetRunMessages": "true",
