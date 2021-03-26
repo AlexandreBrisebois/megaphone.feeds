@@ -30,14 +30,15 @@ namespace Megaphone.Feeds.Commands
 
                 if (Debugger.IsAttached)
                     Console.WriteLine($"[] | resource update : \"{resource.Display}\" ({resource.Published.ToString("s")})");
-
             }
             else
             {
                 var i = entry.Value.Find(i => i.Id == resource.Id);
                 if (IsNotDefault(i))
                 {
-                    i.Display = resource.Display;
+                    if (!string.IsNullOrEmpty(resource.Display))
+                        i.Display = resource.Display;
+
                     i.IsActive = resource.IsActive;
                     i.Updated = resource.Updated;
                     i.Published = resource.Published;
