@@ -5,6 +5,7 @@ using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,8 +29,6 @@ namespace Megaphone.Feeds.Services.Hosted
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            telemetryClient.TrackEvent("FeedUpdater: Execute Called");
-
             if (taskLoop != null)
                 return taskLoop;
 
@@ -37,7 +36,6 @@ namespace Megaphone.Feeds.Services.Hosted
             {
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    telemetryClient.TrackEvent("FeedUpdater: Try Send Feed Crawl Requests");
                     await TrySendFeedCrawlRequests();
 
                     Task.Delay(TimeSpan.FromMinutes(Convert.ToInt32(Environment.GetEnvironmentVariable("SCHEDULE-CRAWL-INTERVAL")))).Wait();
@@ -59,6 +57,8 @@ namespace Megaphone.Feeds.Services.Hosted
                     {
                         var c = new SendCrawlRequestCommand(f);
                         await c.ApplyAsync(crawlerService);
+
+                        telemetryClient.TrackEvent("crawl-request", new Dictionary<string, string> { { "feed", f.Display }, { "url", f.Url } });
                     }
                     catch (Exception ex)
                     {
@@ -71,5 +71,5 @@ namespace Megaphone.Feeds.Services.Hosted
                 telemetryClient.TrackException(ex);
             }
         }
-    }    
+    }
 }
